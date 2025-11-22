@@ -13,7 +13,7 @@ services:
     image: ghcr.io/maede97/foti-box-gallery:latest
     build:
       context: .
-      Dockerfile: Dockerfile
+      dockerfile: Dockerfile
       args:
         - NEXT_PUBLIC_APP_HOST_URL=https://foti-box.com
     restart: always
