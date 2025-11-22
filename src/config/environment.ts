@@ -1,5 +1,5 @@
-import { createEnv } from "@t3-oss/env-nextjs";
-import { z } from "zod";
+import { createEnv } from '@t3-oss/env-nextjs';
+import { z } from 'zod';
 
 export const environmentVariables = createEnv({
   server: {
@@ -14,5 +14,5 @@ export const environmentVariables = createEnv({
   experimental__runtimeEnv: {},
   emptyStringAsUndefined: true,
 
-  skipValidation: process.env["BUILD_TARGET"] === "production",
+  skipValidation: process.env['BUILD_TARGET'] === 'production',
 });

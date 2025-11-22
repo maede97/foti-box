@@ -1,6 +1,6 @@
 import requests
 import sys
-API_URL = "http://localhost:3000/api/upload"
+API_URL = "https://foti-box.com/api/upload"
 
 def upload_image(path_to_file: str, api_key: str):
     with open(path_to_file, "rb") as f:

@@ -13,8 +13,8 @@ services:
     ports:
       - 8081:8081
     environment:
-      ME_CONFIG_BASICAUTH_USERNAME: "admin"
-      ME_CONFIG_BASICAUTH_PASSWORD: "pass"
+      ME_CONFIG_BASICAUTH_USERNAME: 'admin'
+      ME_CONFIG_BASICAUTH_PASSWORD: 'pass'
       ME_CONFIG_MONGODB_SERVER: mongo
     logging:
       driver: none

@@ -26,13 +26,13 @@ services:
       - traefik-proxy
 
     labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=traefik-proxy"
-      - "traefik.http.routers.foti-box.rule=Host(`foti-box.com`)"
-      - "traefik.http.routers.foti-box.entrypoints=websecure"
-      - "traefik.http.routers.foti-box.tls=true"
-      - "traefik.http.routers.foti-box.tls.certresolver=letsencrypt"
-      - "traefik.http.services.foti-box.loadbalancer.server.port=3000"
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=traefik-proxy'
+      - 'traefik.http.routers.foti-box.rule=Host(`foti-box.com`)'
+      - 'traefik.http.routers.foti-box.entrypoints=websecure'
+      - 'traefik.http.routers.foti-box.tls=true'
+      - 'traefik.http.routers.foti-box.tls.certresolver=letsencrypt'
+      - 'traefik.http.services.foti-box.loadbalancer.server.port=3000'
 
     volumes:
       - ./uploads:/data/uploads

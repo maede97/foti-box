@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Types } from 'mongoose';
+import mongoose, { Document, Schema, Types } from 'mongoose';
 
 export interface IImage extends Document {
   uuid: string;
@@ -9,7 +9,7 @@ export interface IImage extends Document {
 
 const ImageSchema = new Schema<IImage>({
   uuid: { type: String, required: true, unique: true },
-  extension: { type: String, required: true, unique: false},
+  extension: { type: String, required: true, unique: false },
   event: { type: Schema.Types.ObjectId, ref: 'Event', required: true },
   createdAt: { type: Date, default: Date.now },
 });

@@ -1,11 +1,11 @@
-import type { MetadataRoute } from "next";
+import type { MetadataRoute } from 'next';
 
 const generateRobots = (): MetadataRoute.Robots => {
   return {
     rules: {
-      userAgent: "*",
-      allow: "/",
-      disallow: "/admin",
+      userAgent: '*',
+      allow: '/',
+      disallow: '/admin',
     },
   };
 };

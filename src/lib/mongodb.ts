@@ -1,5 +1,6 @@
-import mongoose from "mongoose";
-import { environmentVariables } from "@/config/environment";
+import { environmentVariables } from '@/config/environment';
+import { MongoClient } from 'mongodb';
+import mongoose from 'mongoose';
 
 let cached = globalThis.mongoose;
 
@@ -8,6 +9,10 @@ if (!cached) {
 }
 
 export async function connectToDatabase() {
+  if (process.env.NODE_ENV === 'production') {
+    return new MongoClient(environmentVariables.MONGO_URI);
+  }
+
   if (cached.conn) {
     return cached.conn;
   }
@@ -19,7 +24,7 @@ export async function connectToDatabase() {
         return mongoose;
       })
       .catch((err) => {
-        console.error("MongoDB connection error:", err);
+        console.error('MongoDB connection error:', err);
         throw err; // rethrow to propagate the error
       });
   }
