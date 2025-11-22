@@ -1,0 +1,39 @@
+import { NextRequest, NextResponse } from "next/server";
+import { connectToDatabase } from "@/lib/mongodb";
+import Image from "@/models/image";
+import Event from "@/models/event";
+import { requireAdmin } from "@/lib/adminMiddleware";
+import { environmentVariables } from "@/config/environment";
+import path from "path";
+import fs from "fs/promises";
+
+export async function DELETE(req: NextRequest) {
+  await connectToDatabase();
+
+  const authCheck = requireAdmin(req);
+  if (!authCheck)
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { uuid } = await req.json();
+  if (!uuid)
+    return NextResponse.json({ error: "Missing uuid" }, { status: 400 });
+  const image = await Image.findOne({ uuid });
+  const event = await Event.findById(image.event);
+
+  await Image.deleteOne({ uuid });
+
+  // rename image in uploads folder
+  const fileExtension = image.extension;
+  const fileName = `${image.uuid}${fileExtension}`;
+  const filePath = path.join(
+    environmentVariables.UPLOAD_FOLDER,
+    event._id.toString(),
+    fileName
+  );
+
+  await fs.rm(filePath);
+
+  return NextResponse.json({ message: "Image deleted" });
+}
+
+export const dynamic = "force-dynamic";

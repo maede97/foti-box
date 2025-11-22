@@ -1,0 +1,37 @@
+services:
+  mongo:
+    image: mongo:6.0
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+    logging:
+      driver: none
+    ports:
+      - 27017:27017
+  mongo-express:
+    image: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: "admin"
+      ME_CONFIG_BASICAUTH_PASSWORD: "pass"
+      ME_CONFIG_MONGODB_SERVER: mongo
+    logging:
+      driver: none
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_APP_HOST_URL=https://foti-box.com
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongo
+    volumes:
+      - ./uploads:/data/uploads
+    env_file:
+      - .env.docker
+
+volumes:
+  mongo-data:
