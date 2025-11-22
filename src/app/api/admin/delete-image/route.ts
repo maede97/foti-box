@@ -7,14 +7,7 @@ import fs from 'fs/promises';
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 
-export async function DELETE(req: NextRequest) {
-  await connectToDatabase();
-
-  const authCheck = requireAdmin(req);
-  if (!authCheck) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
-  const { uuid } = await req.json();
-  if (!uuid) return NextResponse.json({ error: 'Missing uuid' }, { status: 400 });
+export const deleteImage = async (uuid: string) => {
   const image = await Image.findOne({ uuid });
   const event = await Event.findById(image.event);
 
@@ -26,6 +19,18 @@ export async function DELETE(req: NextRequest) {
   const filePath = path.join(environmentVariables.UPLOAD_FOLDER, event._id.toString(), fileName);
 
   await fs.rm(filePath);
+};
+
+export async function DELETE(req: NextRequest) {
+  await connectToDatabase();
+
+  const authCheck = requireAdmin(req);
+  if (!authCheck) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  const { uuid } = await req.json();
+  if (!uuid) return NextResponse.json({ error: 'Missing uuid' }, { status: 400 });
+
+  await deleteImage(uuid);
 
   return NextResponse.json({ message: 'Image deleted' });
 }

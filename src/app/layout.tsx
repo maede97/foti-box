@@ -27,9 +27,9 @@ interface LayoutProperties {
 const RootLayout: React.FC<LayoutProperties> = async ({ children }) => {
   return (
     <html className={`${montserrat.className} ${inter.className}`} lang="en">
-      <body className="flex h-dvh w-dvw flex-col overflow-x-hidden bg-[#f8fafc]">
-        <div className="mt-[62px] h-[calc(100dvh-62px)] xl:ml-[480px]">
-          <main className="flex min-h-full flex-col justify-between">{children}</main>
+      <body className="">
+        <div className="">
+          <main className="">{children}</main>
         </div>
       </body>
     </html>

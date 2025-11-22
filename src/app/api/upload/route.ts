@@ -43,11 +43,19 @@ export async function POST(req: Request) {
   const filePath = path.join(uploadDir, fileName);
   await fs.writeFile(filePath, buffer);
 
+  // get height and width of image
+  const imageWidth = 0;
+  const imageHeight = 0;
+
   // Save metadata to database
   const image = new Image({
     uuid: fileUuid,
     extension: fileExtension,
     event: event._id,
+    size: {
+      width: imageWidth,
+      height: imageHeight,
+    },
   });
 
   await image.save();
