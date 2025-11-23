@@ -18,7 +18,7 @@ export async function POST(req: Request) {
   if (!event) return NextResponse.json({ error: 'Event not found' }, { status: 404 });
 
   if (event.password !== password)
-    return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
+    return NextResponse.json({ error: 'Falsches Passwort.' }, { status: 401 });
 
   const images = await Image.find({ event: event._id }).sort({ createdAt: -1 });
 

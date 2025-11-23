@@ -27,10 +27,8 @@ interface LayoutProperties {
 const RootLayout: React.FC<LayoutProperties> = async ({ children }) => {
   return (
     <html className={`${montserrat.className} ${inter.className}`} lang="en">
-      <body className="">
-        <div className="">
-          <main className="">{children}</main>
-        </div>
+      <body className="bg-stone-900 p-6 text-stone-200">
+        <main>{children}</main>
       </body>
     </html>
   );

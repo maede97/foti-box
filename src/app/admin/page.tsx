@@ -1,5 +1,6 @@
 'use client';
 
+import { H1 } from '@/components/ui/headings';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -182,20 +183,24 @@ export default function AdminPage() {
 
   if (!loggedIn) {
     return (
-      <div className="flex min-h-screen w-full items-center justify-center bg-gray-950 p-6">
+      <div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md rounded-2xl border border-gray-800 bg-gray-900 p-6 shadow-xl"
+          className="mx-auto max-w-xl bg-stone-200 p-6"
         >
-          <h1 className="mb-6 text-center text-2xl font-bold">Admin Login</h1>
-          <div className="space-y-4">
+          <h2 className="mb-6 text-lg font-semibold tracking-wide text-stone-900 uppercase">
+            Admin Login
+          </h2>
+          {error && <p className="p-2 text-center text-sm text-orange-600">{error}</p>}
+
+          <div className="space-y-3">
             <input
               type="text"
               placeholder="Username"
               value={adminUsername}
               onChange={(e) => setAdminUsername(e.target.value)}
-              className="w-full rounded-xl border border-gray-700 bg-gray-800 p-3 focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-stone-900 p-2 text-sm text-stone-200 focus:outline-none"
             />
             <input
               type="password"
@@ -207,12 +212,11 @@ export default function AdminPage() {
                   handleLogin();
                 }
               }}
-              className="w-full rounded-xl border border-gray-700 bg-gray-800 p-3 focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-stone-900 p-2 text-sm text-stone-200 focus:outline-none"
             />
-            {error && <p className="text-sm text-red-400">{error}</p>}
             <button
               onClick={handleLogin}
-              className="w-full cursor-pointer rounded-xl bg-blue-600 p-3 font-semibold shadow-lg transition hover:bg-blue-700"
+              className="mt-4 w-full cursor-pointer bg-stone-900 p-3 text-sm font-semibold tracking-wide text-stone-200 uppercase focus:outline-none"
             >
               Login
             </button>
@@ -223,9 +227,9 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen w-full bg-gray-950 p-6 text-white">
+    <div>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-4xl font-bold">Admin Dashboard</h1>
+        <H1>Admin Dashboard</H1>
         <button
           onClick={handleLogout}
           className="cursor-pointer rounded-xl bg-red-600 px-4 py-2 font-semibold shadow-lg transition hover:bg-red-700"
@@ -241,7 +245,7 @@ export default function AdminPage() {
           {events.map((evt) => (
             <div
               key={evt._id}
-              className="flex items-center justify-between rounded-xl border border-gray-800 bg-gray-900 p-3"
+              className="flex items-center justify-between rounded-xl border border-stone-500 bg-stone-200 p-3 text-stone-900"
             >
               <span className={evt.active ? 'font-bold' : ''}>{evt.name}</span>
               <div className="flex items-center gap-2">
@@ -256,7 +260,7 @@ export default function AdminPage() {
                 {!evt.active ? (
                   <button
                     onClick={() => switchActiveEvent(evt._id)}
-                    className="cursor-pointer rounded-xl bg-blue-600 px-3 py-1 font-semibold transition hover:bg-blue-700"
+                    className="cursor-pointer rounded-xl bg-stone-900 px-3 py-1 font-semibold text-stone-200 transition hover:bg-stone-700"
                   >
                     Set Active
                   </button>
@@ -278,18 +282,18 @@ export default function AdminPage() {
             placeholder="Event Name"
             value={eventName}
             onChange={(e) => setEventName(e.target.value)}
-            className="rounded-xl border border-gray-700 bg-gray-800 p-3 focus:ring-2 focus:ring-blue-500"
+            className="rounded-xl bg-stone-200 p-3 text-stone-900 focus:outline-none"
           />
           <input
-            type="password"
+            type="text"
             placeholder="Password"
             value={eventPassword}
             onChange={(e) => setEventPassword(e.target.value)}
-            className="rounded-xl border border-gray-700 bg-gray-800 p-3 focus:ring-2 focus:ring-blue-500"
+            className="rounded-xl bg-stone-200 p-3 text-stone-900 focus:outline-none"
           />
           <button
             onClick={handleAddEvent}
-            className="cursor-pointer rounded-xl bg-blue-600 px-4 py-2 font-semibold shadow-lg transition hover:bg-blue-700"
+            className="cursor-pointer rounded-xl bg-stone-200 px-4 py-2 font-semibold text-stone-900 shadow-lg transition hover:bg-stone-700"
           >
             Add Event
           </button>
@@ -323,7 +327,7 @@ export default function AdminPage() {
                 </Link>
                 <button
                   onClick={() => handleDeleteImage(img.uuid)}
-                  className="absolute top-2 right-2 cursor-pointer rounded-full bg-red-600 px-2 py-1 text-sm font-bold text-white shadow-lg transition hover:bg-red-700"
+                  className="absolute top-4 right-4 z-100 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full bg-red-600 text-stone-900 transition hover:bg-red-900"
                 >
                   X
                 </button>
