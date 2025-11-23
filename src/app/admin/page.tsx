@@ -24,7 +24,9 @@ export default function AdminPage() {
   const [adminPassword, setAdminPassword] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const [token, setToken] = useState<string | null>(null);
-  const [events, setEvents] = useState<{ _id: string; name: string; active: boolean }[]>([]);
+  const [events, setEvents] = useState<
+    { _id: string; name: string; active: boolean; allow_user_uploads: boolean }[]
+  >([]);
 
   async function fetchEvents() {
     if (!token) return;
@@ -160,6 +162,24 @@ export default function AdminPage() {
     setEvents(events.filter((event) => event._id !== eventID));
   }
 
+  async function handleSetAllowUserUpload(eventId: string, allow_user_uploads: boolean) {
+    const res = await fetch('/api/admin/allow-user-uploads', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ eventId, allow_user_uploads }),
+    });
+    if (!res.ok) {
+      const data = await res.json();
+      setError(data.error || 'Failed to update event');
+      return;
+    }
+    alert(`Event does now${allow_user_uploads ? '' : ' not'} allow uploads.`);
+    fetchEvents();
+  }
+
   async function handleDeleteImage(uuid: string) {
     if (!confirm('Are you sure you want to delete this image?')) return;
 
@@ -249,6 +269,12 @@ export default function AdminPage() {
             >
               <span className={evt.active ? 'font-bold' : ''}>{evt.name}</span>
               <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handleSetAllowUserUpload(evt._id, !evt.allow_user_uploads)}
+                  className={`cursor-pointer rounded-xl px-3 py-1 font-semibold transition ${evt.allow_user_uploads ? 'bg-green-600 hover:bg-green-800' : 'bg-red-600 hover:bg-red-800'}`}
+                >
+                  Allows User Uploads
+                </button>
                 {!evt.active && (
                   <button
                     onClick={() => handleDeleteEvent(evt._id)}

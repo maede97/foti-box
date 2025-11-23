@@ -13,8 +13,7 @@ export async function POST(req: NextRequest) {
   if (!name || !password)
     return NextResponse.json({ error: 'Missing name or password' }, { status: 400 });
 
-  await Event.updateMany({}, { active: false }); // Only one active event
-  const event = new Event({ name, password, active: true });
+  const event = new Event({ name, password, allow_user_uploads: false, active: false });
   await event.save();
 
   return NextResponse.json({ message: 'Event created', event });
