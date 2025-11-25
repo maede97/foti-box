@@ -31,7 +31,7 @@ const GalleryLogin: React.FC<{ fetchGallery; error: string }> = ({ fetchGallery,
       </h2>
 
       {(error || error2) && (
-        <p className="p-2 text-center text-sm text-orange-600">
+        <p className="p-2 text-center text-sm text-error">
           {error}
           {error2}
         </p>
