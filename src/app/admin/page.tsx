@@ -140,7 +140,7 @@ export default function AdminPage() {
   async function handleAddEvent() {
     if (!eventName || !eventPassword) return setError('Provide name and password');
 
-    const res = await fetch('/api/admin/add-event', {
+    const res = await fetch('/api/admin/events', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -291,7 +291,7 @@ export default function AdminPage() {
           <h2 className="text-primary mb-6 text-lg font-semibold tracking-wide uppercase">
             Admin Login
           </h2>
-          {error && <p className="p-2 text-center text-sm text-error">{error}</p>}
+          {error && <p className="text-error p-2 text-center text-sm">{error}</p>}
 
           <div className="space-y-3">
             <input
