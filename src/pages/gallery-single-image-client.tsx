@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import React from 'react';
 
-export const GallerySingleImageClient: React.FC<{ uuid: string }> = ({ uuid }) => {
+const GallerySingleImageClient: React.FC<{ uuid: string }> = ({ uuid }) => {
   return (
     <div className="m-6">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -17,3 +17,5 @@ export const GallerySingleImageClient: React.FC<{ uuid: string }> = ({ uuid }) =
     </div>
   );
 };
+
+export default GallerySingleImageClient;

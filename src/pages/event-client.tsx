@@ -4,7 +4,7 @@ import { fetchGallery } from '@/components/gallery/fetch';
 import GalleryLogin from '@/components/gallery/login';
 import React, { useState } from 'react';
 
-export const EventPageClient: React.FC<{ eventName: string; eventSlug: string }> = ({
+const EventPageClient: React.FC<{ eventName: string; eventSlug: string }> = ({
   eventName,
   eventSlug,
 }) => {
@@ -27,3 +27,5 @@ export const EventPageClient: React.FC<{ eventName: string; eventSlug: string }>
     </div>
   );
 };
+
+export default EventPageClient;
