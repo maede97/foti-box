@@ -1,7 +1,6 @@
 services:
   mongo:
     image: mongo:6.0
-    restart: always
     volumes:
       - mongo-data:/data/db
     logging:
@@ -23,13 +22,13 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        - NEXT_PUBLIC_APP_HOST_URL=https://foti-box.com
+        - NEXT_PUBLIC_APP_HOST_URL=http://localhost:3000
     ports:
       - 3000:3000
     depends_on:
       - mongo
     volumes:
-      - ./uploads:/data/uploads
+      - ./uploads-docker:/data/uploads
     env_file:
       - .env.docker
 
