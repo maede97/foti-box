@@ -1,33 +1,12 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
-
-interface Event {
-  _id: string;
-  name: string;
-  active: boolean;
-}
+import { useState } from 'react';
 
 const GalleryLogin: React.FC<{
   fetchGallery;
   error: string;
-  preselectEvent?: string | undefined;
-}> = ({ fetchGallery, error, preselectEvent }) => {
-  const [selectedEvent, setSelectedEvent] = useState('');
-  const [events, setEvents] = useState<Event[]>([]);
-  const [error2, setError2] = useState('');
+  selectedEvent: string;
+}> = ({ fetchGallery, error, selectedEvent }) => {
   const [password, setPassword] = useState('');
-
-  useEffect(() => {
-    if (preselectEvent) {
-      setSelectedEvent(preselectEvent);
-      return;
-    }
-
-    fetch('/api/gallery/events')
-      .then((res) => res.json())
-      .then((data) => setEvents(data))
-      .catch(() => setError2('Fehler. Bitte lade die Seite neu um es erneut zu versuchen.'));
-  }, [preselectEvent]);
 
   return (
     <motion.div
@@ -39,31 +18,8 @@ const GalleryLogin: React.FC<{
         Anmelden, um die Galerie anzusehen
       </h2>
 
-      {(error || error2) && (
-        <p className="text-error p-2 text-center text-sm">
-          {error}
-          {error2}
-        </p>
-      )}
+      {error && <p className="text-error p-2 text-center text-sm">{error}</p>}
       <div className="space-y-3">
-        {!preselectEvent && (
-          <div className="flex flex-col gap-1">
-            <label className="text-primary text-xs tracking-wide uppercase">Event</label>
-            <select
-              value={selectedEvent}
-              onChange={(e) => setSelectedEvent(e.target.value)}
-              className="bg-primary text-secondary w-full p-2 text-sm focus:outline-none"
-            >
-              <option value="">Event auswählen</option>
-              {events.map((evt) => (
-                <option key={evt._id} value={evt.name}>
-                  {evt.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-
         <div className="flex flex-col gap-1">
           <label className="text-primary text-xs tracking-wide uppercase">Passwort</label>
           <input

@@ -1,12 +1,11 @@
-export async function fetchGallery(selectedEvent, password, setError, setImages, setLoggedIn) {
+export async function fetchGallery(eventSlug, password, setError, setImages, setLoggedIn) {
   setError('');
-  if (!selectedEvent || !password)
-    return setError('Wähle einen Event aus und gib das Passwort ein.');
+  if (!eventSlug || !password) return setError('Wähle einen Event aus und gib das Passwort ein.');
 
   const res = await fetch('/api/gallery', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ eventName: selectedEvent, password }),
+    body: JSON.stringify({ slug: eventSlug, password: password }),
   });
 
   if (!res.ok) {

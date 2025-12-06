@@ -35,7 +35,7 @@ const EventPage: React.FC<{ params: ParamsType }> = async ({ params }) => {
     notFound();
   }
 
-  return <EventPageClient eventName={dbEvent.name} />;
+  return <EventPageClient eventName={dbEvent.name} eventSlug={slug} />;
 };
 
 export default EventPage;

@@ -8,7 +8,7 @@ export const generateMetadata = async () => {
     title: 'Hochladen | foti-box.com',
     description: 'Lade deine Bilder in die foti-box.com Galerie hoch.',
   };
-}
+};
 
 const ImageUpload: React.FC = async () => {
   const event = await Event.findOne({ allow_user_uploads: true, active: true });

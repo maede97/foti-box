@@ -5,7 +5,10 @@ import GalleryLogin from '@/components/gallery/login';
 import { LoadingSpinner } from '@/components/ui/loading';
 import React, { useEffect, useState } from 'react';
 
-export const EventPageClient: React.FC<{ eventName: string }> = ({ eventName }) => {
+export const EventPageClient: React.FC<{ eventName: string; eventSlug: string }> = ({
+  eventName,
+  eventSlug,
+}) => {
   const [hydrated, setHydrated] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [error, setError] = useState('');
@@ -31,7 +34,7 @@ export const EventPageClient: React.FC<{ eventName: string }> = ({ eventName }) 
             fetchGallery(selectedEvents, passwords, setError, setImages, setLoggedIn)
           }
           error={error}
-          preselectEvent={eventName}
+          selectedEvent={eventSlug}
         />
       )}
       {loggedIn && <GalleryDisplay images={images} title={eventName} />}{' '}

@@ -7,14 +7,14 @@ import { NextResponse } from 'next/server';
 import path from 'path';
 
 export async function POST(req: Request) {
-  const { eventName, password } = await req.json();
+  const { slug, password } = await req.json();
 
-  if (!eventName || !password)
-    return NextResponse.json({ error: 'Missing eventName or password' }, { status: 400 });
+  if (!slug || !password)
+    return NextResponse.json({ error: 'Missing slug or password' }, { status: 400 });
 
   await connectToDatabase();
 
-  const event = await Event.findOne({ name: eventName });
+  const event = await Event.findOne({ slug: slug });
   if (!event) return NextResponse.json({ error: 'Event not found' }, { status: 404 });
 
   if (event.password !== password)
