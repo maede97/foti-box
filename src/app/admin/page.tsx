@@ -19,6 +19,7 @@ export default function AdminPage() {
   const [images, setImages] = useState<ImageType[]>([]);
 
   const [eventName, setEventName] = useState('');
+  const [eventSlug, setEventSlug] = useState('');
   const [eventPassword, setEventPassword] = useState('');
 
   const [boxLabel, setBoxLabel] = useState('');
@@ -136,7 +137,8 @@ export default function AdminPage() {
   }
 
   async function handleAddEvent() {
-    if (!eventName || !eventPassword) return setError('Provide name and password');
+    if (!eventName || !eventPassword || !eventSlug)
+      return setError('Provide name, slug and password');
 
     const res = await fetch('/api/admin/events', {
       method: 'POST',
@@ -144,7 +146,7 @@ export default function AdminPage() {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ name: eventName, password: eventPassword }),
+      body: JSON.stringify({ name: eventName, slug: eventSlug, password: eventPassword }),
     });
 
     if (!res.ok) {
@@ -154,6 +156,7 @@ export default function AdminPage() {
     }
 
     setEventName('');
+    setEventSlug('');
     setEventPassword('');
     fetchEvents();
   }
@@ -345,6 +348,7 @@ export default function AdminPage() {
               className="text-primary bg-secondary border-accent flex items-center justify-between rounded-xl border p-3"
             >
               <span className={evt.active ? 'font-bold' : ''}>{evt.name}</span>
+              <span className={'text-primary/70 text-sm'}>Slug: {evt.slug}</span>
               <span className="text-primary/70 text-sm">(Password: {evt.password})</span>
               <div className="flex items-center gap-2">
                 <button
@@ -384,6 +388,13 @@ export default function AdminPage() {
             placeholder="Event Name"
             value={eventName}
             onChange={(e) => setEventName(e.target.value)}
+            className="text-primary bg-secondary rounded-xl p-3 focus:outline-none"
+          />
+          <input
+            type="text"
+            placeholder="event-slug"
+            value={eventSlug}
+            onChange={(e) => setEventSlug(e.target.value)}
             className="text-primary bg-secondary rounded-xl p-3 focus:outline-none"
           />
           <input

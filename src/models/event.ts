@@ -2,6 +2,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IEvent extends Document {
   name: string;
+  slug: string;
   password: string;
   active: boolean;
   allow_user_uploads: boolean;
@@ -9,6 +10,7 @@ export interface IEvent extends Document {
 
 const EventSchema = new Schema<IEvent>({
   name: { type: String, required: true },
+  slug: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   active: { type: Boolean, default: false },
   allow_user_uploads: { type: Boolean, default: false },

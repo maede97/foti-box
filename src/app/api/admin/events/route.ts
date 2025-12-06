@@ -1,12 +1,12 @@
+import { environmentVariables } from '@/config/environment';
 import { requireAdmin } from '@/lib/adminMiddleware';
 import { connectToDatabase } from '@/lib/mongodb';
 import Event from '@/models/event';
 import Image from '@/models/image';
-import { NextRequest, NextResponse } from 'next/server';
-import { deleteImage } from '../delete-image/route';
-import path from 'path';
-import { environmentVariables } from '@/config/environment';
 import fs from 'fs/promises';
+import { NextRequest, NextResponse } from 'next/server';
+import path from 'path';
+import { deleteImage } from '../delete-image/route';
 
 export async function GET(req: NextRequest) {
   await connectToDatabase();
@@ -57,11 +57,11 @@ export async function POST(req: NextRequest) {
   const authCheck = requireAdmin(req);
   if (!authCheck) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const { name, password } = await req.json();
-  if (!name || !password)
-    return NextResponse.json({ error: 'Missing name or password' }, { status: 400 });
+  const { name, slug, password } = await req.json();
+  if (!name || !password || !slug)
+    return NextResponse.json({ error: 'Missing name, slug or password' }, { status: 400 });
 
-  const event = new Event({ name, password, allow_user_uploads: false, active: false });
+  const event = new Event({ name, slug, password, allow_user_uploads: false, active: false });
   await event.save();
 
   return NextResponse.json({ message: 'Event created', event });

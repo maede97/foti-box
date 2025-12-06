@@ -1,8 +1,9 @@
+import { ErrorPage } from '@/app/pages/error';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
-const GalleryDisplay: React.FC<{ images: string[] }> = ({ images }) => {
+const GalleryDisplay: React.FC<{ images: string[]; title: string }> = ({ images, title }) => {
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const [direction, setDirection] = useState<number>(0);
 
@@ -30,12 +31,15 @@ const GalleryDisplay: React.FC<{ images: string[] }> = ({ images }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [closeGallery, prevImage, nextImage]);
 
+  if (images.length === 0) {
+    return <ErrorPage message={'Keine Fotos in dieser Galerie.'} />;
+  }
+
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8">
-      {images.length === 0 && (
-        <h2 className="mb-4 text-center text-2xl font-semibold">Keine Fotos in dieser Galerie</h2>
-      )}
-
+      <h1 className="text-secondary mb-6 text-center text-2xl font-semibold tracking-wide uppercase">
+        {title || 'Galerie'}
+      </h1>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {images.map((uuid, index) => (
           <div

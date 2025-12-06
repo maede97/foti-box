@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
 
   const events = await Event.find({}).sort({ createdAt: -1 });
 
-  const eventsWithoutPasswords = events.map(event => {
+  const eventsWithoutPasswords = events.map((event) => {
     const eventObj = event.toObject();
     delete eventObj.password;
     return eventObj;

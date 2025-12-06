@@ -1,50 +1,28 @@
-'use client';
-import { LoadingSpinner } from '@/components/ui/loading';
-import { motion } from 'framer-motion';
-import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import { GallerySingleImageClient } from '@/app/pages/gallery-single-image-client';
+import { connectToDatabase } from '@/lib/mongodb';
+import image from '@/models/image';
+import { notFound } from 'next/navigation';
+import React from 'react';
 
 interface ParamsType {
   uuid: string;
 }
-const GalleryPage: React.FC<{ params: React.Usable<ParamsType> }> = ({ params }) => {
-  const { uuid } = React.use<ParamsType>(params);
-  const [hydrated, setHydrated] = useState(false);
-  const [error, setError] = useState('');
+const GalleryPage: React.FC<{ params: ParamsType }> = async ({ params }) => {
+  await connectToDatabase();
 
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
+  const { uuid } = await params;
 
-  if (!hydrated) {
-    return (
-      <div className="absolute flex size-full items-center justify-center">
-        <LoadingSpinner color={'secondary'} />
-      </div>
-    );
+  // Verification that the image exists
+  const dbImage = await image.findOne({ uuid: uuid });
+
+  if (!dbImage) {
+    notFound();
   }
 
   return (
-    <>
-      {error && (
-        <div className="text-error absolute flex size-full items-center justify-center">
-          {error}
-        </div>
-      )}
-      {!error && (
-        <div className="m-6">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <Image
-              src={`/api/gallery?uuid=${uuid}`}
-              alt="Photo"
-              fill
-              className="bg-primary object-contain"
-              onError={() => setError('Dieses Bild existiert nicht (mehr).')}
-            />
-          </motion.div>
-        </div>
-      )}
-    </>
+    <div className="m-6">
+      <GallerySingleImageClient uuid={uuid} />
+    </div>
   );
 };
 
