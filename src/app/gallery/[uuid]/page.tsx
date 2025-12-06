@@ -1,6 +1,6 @@
 import { connectToDatabase } from '@/lib/mongodb';
 import image from '@/models/image';
-import { GallerySingleImageClient } from '@/pages/gallery-single-image-client';
+import GallerySingleImageClient from '@/pages/gallery-single-image-client';
 import { notFound } from 'next/navigation';
 import React from 'react';
 

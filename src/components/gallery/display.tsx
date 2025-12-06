@@ -1,4 +1,4 @@
-import { ErrorPage } from '@/pages/error';
+import ErrorPage from '@/pages/error';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
