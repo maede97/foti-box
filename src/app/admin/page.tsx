@@ -61,6 +61,11 @@ export default function AdminPage() {
     const res = await fetch('/api/admin/events', {
       headers: { Authorization: `Bearer ${token}` },
     });
+
+    if (res.status === 401) {
+      return handleLogout();
+    }
+
     if (res.ok) {
       const data = await res.json();
       setEvents(data);
@@ -162,6 +167,10 @@ export default function AdminPage() {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) {
+        if (res.status === 401) {
+          return handleLogout();
+        }
+
         const data = await res.json();
         setError(data.error || 'Bilder konnten nicht geladen werden.');
         setLoading(false);
@@ -181,6 +190,9 @@ export default function AdminPage() {
     const res = await fetch('/api/admin/box', {
       headers: { Authorization: `Bearer ${token}` },
     });
+    if (res.status === 401) {
+      return handleLogout();
+    }
     if (res.ok) {
       const data = await res.json();
       setBoxes(data);
