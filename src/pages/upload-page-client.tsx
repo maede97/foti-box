@@ -103,12 +103,14 @@ const ImageUploadClient: React.FC = () => {
             </div>
           )}
 
-          <button
-            onClick={handleUpload}
-            className="bg-primary text-secondary mt-4 w-full cursor-pointer p-3 text-sm font-semibold tracking-wide uppercase focus:outline-none"
-          >
-            Hochladen
-          </button>
+          {selectedFile && (
+            <button
+              onClick={handleUpload}
+              className="bg-primary text-secondary mt-4 w-full cursor-pointer p-3 text-sm font-semibold tracking-wide uppercase focus:outline-none"
+            >
+              Hochladen
+            </button>
+          )}
         </div>
       )}
     </motion.div>
