@@ -5,6 +5,7 @@ import { IEvent } from '@/models/event';
 import { IImage } from '@/models/image';
 import { motion } from 'framer-motion';
 import { ExternalLink, Plus, X } from 'lucide-react';
+import { ObjectId } from 'mongoose';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -110,7 +111,7 @@ export default function AdminPage() {
     setShowAddEvent(false);
   }
 
-  async function handleDeleteEvent(eventID: string) {
+  async function handleDeleteEvent(eventID: ObjectId) {
     if (!confirm('Bist du sicher, dass du diesen Event löschen willst?')) return;
 
     const res = await fetch('/api/admin/events', {
@@ -127,7 +128,7 @@ export default function AdminPage() {
       setError(data.error || 'Der Event konnte nicht gelöscht werden.');
       return;
     }
-    setImages(images.filter((img) => img.event !== eventID));
+    setImages(images.filter((img) => (img.event as unknown as ObjectId) !== eventID));
     setEvents(events.filter((event) => event._id !== eventID));
   }
   async function handleLogin() {
