@@ -48,7 +48,7 @@ const ImageUploadClient: React.FC = () => {
       }
 
       setError('');
-      setMessage('Vielen Dank!');
+      setMessage('Vielen Dank! Seite neu laden, um ein weiteres Bild hochzuladen.');
       setSelectedFile(undefined);
       setPreviewUrl(undefined);
       setHasUploaded(true);

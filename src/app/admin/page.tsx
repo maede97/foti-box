@@ -3,7 +3,7 @@
 import { IBox } from '@/models/box';
 import { IEvent } from '@/models/event';
 import { motion } from 'framer-motion';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, Plus, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -459,9 +459,9 @@ export default function AdminPage() {
               setError('');
               setShowAddEvent(true);
             }}
-            className="bg-secondary text-primary hover:bg-accent-dark cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
+            className="bg-secondary text-primary hover:bg-accent-dark inline-flex cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
           >
-            + Event hinzufügen
+            <Plus /> Event hinzufügen
           </button>
         </div>
 
@@ -515,7 +515,7 @@ export default function AdminPage() {
                         onClick={() => handleDeleteLogo(evt._id)}
                         className="text-primary bg-error hover:bg-error-dark absolute top-4 right-4 z-50 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full transition"
                       >
-                        X
+                        <X />
                       </button>
                     </motion.div>
                   ) : (
@@ -524,9 +524,9 @@ export default function AdminPage() {
                         setError('');
                         setShowAddLogo(evt._id);
                       }}
-                      className="bg-primary text-secondary hover:bg-accent-dark cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
+                      className="bg-primary text-secondary hover:bg-accent-dark inline-flex cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
                     >
-                      + Logo setzen
+                      <Plus /> Logo setzen
                     </button>
                   )}
                 </td>
@@ -565,9 +565,9 @@ export default function AdminPage() {
               setError('');
               setShowAddBox(true);
             }}
-            className="bg-secondary text-primary hover:bg-accent-dark cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
+            className="bg-secondary text-primary hover:bg-accent-dark inline-flex cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
           >
-            + Box hinzufügen
+            <Plus /> Box hinzufügen
           </button>
         </div>
 
@@ -646,7 +646,7 @@ export default function AdminPage() {
                   onClick={() => handleDeleteImage(img.uuid)}
                   className="text-primary bg-error hover:bg-error-dark absolute top-4 right-4 z-50 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full transition"
                 >
-                  X
+                  <X />
                 </button>
               </motion.div>
             ))}
@@ -748,12 +748,14 @@ export default function AdminPage() {
               )}
             </div>
             {error && <p className="text-error">{error}</p>}
-            <button
-              onClick={handleAddLogo}
-              className="bg-primary text-secondary hover:bg-accent-dark cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
-            >
-              Logo setzen
-            </button>
+            {selectedLogo && (
+              <button
+                onClick={handleAddLogo}
+                className="bg-primary text-secondary hover:bg-accent-dark cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
+              >
+                Logo setzen
+              </button>
+            )}
           </div>
         </Modal>
       )}
