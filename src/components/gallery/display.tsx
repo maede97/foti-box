@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -64,21 +65,21 @@ const GalleryDisplay: React.FC<{ images: string[]; title: string }> = ({ images,
               className="text-primary bg-secondary hover:bg-accent absolute top-4 right-4 z-100 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-xl"
               onClick={closeGallery}
             >
-              &times;
+              <X />
             </button>
 
             <button
               className="text-primary bg-secondary hover:bg-accent absolute left-4 z-100 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-xl"
               onClick={prevImage}
             >
-              &#8249;
+              <ChevronLeft />
             </button>
 
             <button
               className="text-primary bg-secondary hover:bg-accent absolute right-4 z-100 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-xl"
               onClick={nextImage}
             >
-              &#8250;
+              <ChevronRight />
             </button>
 
             <div
