@@ -12,7 +12,7 @@ export interface IEvent extends Document {
 const EventSchema = new Schema<IEvent>({
   name: { type: String, required: true },
   slug: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  password: { type: String, required: false, default: '' },
   active: { type: Boolean, default: false },
   allow_user_uploads: { type: Boolean, default: false },
   logo: { type: String, required: false },

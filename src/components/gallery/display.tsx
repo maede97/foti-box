@@ -1,4 +1,3 @@
-import ErrorPage from '@/pages/error';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
@@ -30,10 +29,6 @@ const GalleryDisplay: React.FC<{ images: string[]; title: string }> = ({ images,
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [closeGallery, prevImage, nextImage]);
-
-  if (images.length === 0) {
-    return <ErrorPage message={'Keine Fotos in dieser Galerie.'} />;
-  }
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8">

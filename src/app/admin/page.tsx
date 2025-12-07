@@ -90,8 +90,7 @@ export default function AdminPage() {
   }
 
   async function handleAddEvent() {
-    if (!eventName || !eventPassword || !eventSlug)
-      return setError('Name, Slug und Passwort angeben.');
+    if (!eventName || !eventSlug) return setError('Name und Slug angeben.');
 
     const res = await fetch('/api/admin/events', {
       method: 'POST',

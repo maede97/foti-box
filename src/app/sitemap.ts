@@ -16,7 +16,7 @@ export default function siteamp(): MetadataRoute.Sitemap {
     {
       url: `${environmentVariables.APP_HOST_URL}/admin`,
       lastModified: new Date(),
-      priority: 0.8
-    }
+      priority: 0.8,
+    },
   ];
 }

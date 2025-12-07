@@ -2,15 +2,22 @@
 import GalleryDisplay from '@/components/gallery/display';
 import { fetchGallery } from '@/components/gallery/fetch';
 import GalleryLogin from '@/components/gallery/login';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const EventPageClient: React.FC<{ eventName: string; eventSlug: string }> = ({
-  eventName,
-  eventSlug,
-}) => {
+const EventPageClient: React.FC<{
+  eventName: string;
+  eventSlug: string;
+  doesNotRequirePassword: boolean;
+}> = ({ eventName, eventSlug, doesNotRequirePassword }) => {
   const [images, setImages] = useState<string[]>([]);
   const [error, setError] = useState('');
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(doesNotRequirePassword);
+
+  useEffect(() => {
+    if (doesNotRequirePassword) {
+      void fetchGallery(eventSlug, '', setError, setImages, setLoggedIn);
+    }
+  }, []);
 
   return (
     <div className="m-6">

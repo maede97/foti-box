@@ -9,8 +9,7 @@ import path from 'path';
 export async function POST(req: Request) {
   const { slug, password } = await req.json();
 
-  if (!slug || !password)
-    return NextResponse.json({ error: 'Missing slug or password' }, { status: 400 });
+  if (!slug) return NextResponse.json({ error: 'Missing slug' }, { status: 400 });
 
   await connectToDatabase();
 

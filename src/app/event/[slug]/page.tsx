@@ -35,7 +35,15 @@ const EventPage: React.FC<{ params: ParamsType }> = async ({ params }) => {
     notFound();
   }
 
-  return <EventPageClient eventName={dbEvent.name} eventSlug={slug} />;
+  const doesNotRequirePassword = dbEvent.password === '';
+
+  return (
+    <EventPageClient
+      eventName={dbEvent.name}
+      eventSlug={slug}
+      doesNotRequirePassword={doesNotRequirePassword}
+    />
+  );
 };
 
 export default EventPage;

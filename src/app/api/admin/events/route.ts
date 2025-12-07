@@ -55,10 +55,16 @@ export async function POST(req: NextRequest) {
   if (!authCheck) return NextResponse.json({ error: 'Nicht autorisiert' }, { status: 401 });
 
   const { name, slug, password } = await req.json();
-  if (!name || !password || !slug)
-    return NextResponse.json({ error: 'Fehlender Name, Slug oder Passwort' }, { status: 400 });
+  if (!name || !slug)
+    return NextResponse.json({ error: 'Fehlender Name oder Slug' }, { status: 400 });
 
-  const event = new Event({ name, slug, password, allow_user_uploads: false, active: false });
+  const event = new Event({
+    name,
+    slug,
+    password: password,
+    allow_user_uploads: false,
+    active: false,
+  });
   await event.save();
 
   return NextResponse.json({ message: 'Event erstellt', event });
