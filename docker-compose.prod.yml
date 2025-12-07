@@ -10,7 +10,7 @@ services:
       driver: none
 
   app:
-    image: ghcr.io/maede97/foti-box-gallery:latest
+    image: ghcr.io/maede97/foti-box:latest
     build:
       context: .
       dockerfile: Dockerfile
