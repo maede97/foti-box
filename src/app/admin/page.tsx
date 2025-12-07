@@ -3,6 +3,7 @@
 import { IBox } from '@/models/box';
 import { IEvent } from '@/models/event';
 import { motion } from 'framer-motion';
+import { ExternalLink } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -479,7 +480,15 @@ export default function AdminPage() {
           <tbody>
             {events.map((evt) => (
               <tr key={evt._id} className="border-accent text-primary border-b">
-                <td className="p-3 font-semibold">{evt.name}</td>
+                <td className="p-3 font-semibold">
+                  <Link
+                    href={`/event/${evt.slug}`}
+                    target="_blank"
+                    className="hover:decoration-accent-dark hover:text-accent-dark inline-flex items-center gap-1 hover:underline"
+                  >
+                    {evt.name} <ExternalLink className="size-4" />
+                  </Link>
+                </td>
                 <td className="text-primary/70 p-3">{evt.slug}</td>
                 <td className="text-primary/70 p-3">{evt.password}</td>
                 <td className="p-3">

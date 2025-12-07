@@ -1,5 +1,7 @@
 import IconList from '@/components/ui/icon-list';
+import { ExternalLink } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const HomePage: React.FC = () => {
   return (
@@ -18,12 +20,13 @@ const HomePage: React.FC = () => {
 
           <span className="text-sm tracking-wide uppercase">
             Box Mieten?{' '}
-            <a
-              className="text-secondary hover:text-accent underline"
+            <Link
               href="mailto:mieten@foti-box.com"
+              target="_blank"
+              className="text-secondary hover:text-accent inline-flex items-center gap-1 underline"
             >
-              mieten@foti-box.com
-            </a>
+              mieten@foti-box.com <ExternalLink className="size-4" />
+            </Link>
           </span>
 
           <span className="text-sm tracking-wide">

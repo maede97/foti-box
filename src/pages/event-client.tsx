@@ -2,7 +2,7 @@
 import GalleryDisplay from '@/components/gallery/display';
 import { fetchGallery } from '@/components/gallery/fetch';
 import GalleryLogin from '@/components/gallery/login';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const EventPageClient: React.FC<{
   eventName: string;
