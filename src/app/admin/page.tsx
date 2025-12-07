@@ -36,6 +36,7 @@ function Modal({ title, onClose, children }) {
 
 export default function AdminPage() {
   const [images, setImages] = useState<ImageType[]>([]);
+  const [imagesForEvent, setImagesForEvent] = useState<IEvent | undefined>();
 
   const [eventName, setEventName] = useState('');
   const [eventSlug, setEventSlug] = useState('');
@@ -50,7 +51,7 @@ export default function AdminPage() {
   const [adminUsername, setAdminUsername] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | undefined>(undefined);
   const [events, setEvents] = useState<IEvent[]>([]);
   const [boxes, setBoxes] = useState<IBox[]>([]);
 
@@ -159,16 +160,19 @@ export default function AdminPage() {
 
   function handleLogout() {
     localStorage.removeItem('adminToken');
-    setToken(null);
+    setToken(undefined);
     setLoggedIn(false);
   }
 
-  async function fetchImages() {
+  async function fetchImages(event: IEvent) {
     setLoading(true);
     setError('');
+    setImages([]);
     try {
-      const res = await fetch('/api/admin/images', {
+      const res = await fetch('/api/gallery', {
         headers: { Authorization: `Bearer ${token}` },
+        method: 'POST',
+        body: JSON.stringify({ slug: event.slug, password: event.password }),
       });
       if (!res.ok) {
         if (res.status === 401) {
@@ -385,7 +389,6 @@ export default function AdminPage() {
   useEffect(() => {
     if (loggedIn && token) {
       fetchEvents();
-      fetchImages();
       fetchBoxes();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -544,6 +547,15 @@ export default function AdminPage() {
                 </td>
                 <td className="p-3 text-right">
                   <button
+                    className="text-secondary bg-primary cursor-pointer rounded-xl px-3 py-1 font-semibold transition"
+                    onClick={() => {
+                      setImagesForEvent(evt);
+                      void fetchImages(evt);
+                    }}
+                  >
+                    Lade Bilder
+                  </button>
+                  <button
                     onClick={() => handleDeleteEvent(evt._id)}
                     className="bg-error hover:bg-error-dark cursor-pointer rounded-xl px-3 py-1 font-semibold transition"
                   >
@@ -621,38 +633,42 @@ export default function AdminPage() {
       </section>
 
       {/* Images Grid */}
-      <section>
-        <h2 className="mb-4 text-2xl font-semibold">Alle Bilder</h2>
-        {loading ? (
-          <p>Lade Bilder...</p>
-        ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {images.map((img) => (
-              <motion.div
-                key={img.uuid}
-                whileHover={{ scale: 1.05 }}
-                className="relative overflow-hidden rounded-xl shadow-lg"
-              >
-                <Link href={`/gallery/${img.uuid}`} target="_blank">
-                  <Image
-                    src={`/api/gallery?uuid=${img.uuid}`}
-                    alt="foti-box.com"
-                    width={300}
-                    height={200}
-                    className="h-40 w-full object-cover"
-                  />
-                </Link>
-                <button
-                  onClick={() => handleDeleteImage(img.uuid)}
-                  className="text-primary bg-error hover:bg-error-dark absolute top-4 right-4 z-50 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full transition"
+      {imagesForEvent && (
+        <section>
+          <h2 className="mb-4 text-2xl font-semibold">
+            Bilder für den Event {imagesForEvent.name}
+          </h2>
+          {loading ? (
+            <p>Lade Bilder...</p>
+          ) : (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+              {images.map((img) => (
+                <motion.div
+                  key={img.uuid}
+                  whileHover={{ scale: 1.05 }}
+                  className="relative overflow-hidden rounded-xl shadow-lg"
                 >
-                  <X />
-                </button>
-              </motion.div>
-            ))}
-          </div>
-        )}
-      </section>
+                  <Link href={`/gallery/${img.uuid}`} target="_blank">
+                    <Image
+                      src={`/api/gallery?uuid=${img.uuid}`}
+                      alt="foti-box.com"
+                      width={300}
+                      height={200}
+                      className="h-40 w-full object-cover"
+                    />
+                  </Link>
+                  <button
+                    onClick={() => handleDeleteImage(img.uuid)}
+                    className="text-primary bg-error hover:bg-error-dark absolute top-4 right-4 z-50 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full transition"
+                  >
+                    <X />
+                  </button>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
       {showAddEvent && (
         <Modal title="Event hinzufügen" onClose={() => setShowAddEvent(false)}>

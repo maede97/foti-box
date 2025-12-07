@@ -6,15 +6,16 @@ import fs from 'fs/promises';
 import { NextResponse } from 'next/server';
 import path from 'path';
 
+// all images in gallery by password
 export async function POST(req: Request) {
   const { slug, password } = await req.json();
 
-  if (!slug) return NextResponse.json({ error: 'Missing slug' }, { status: 400 });
+  if (!slug) return NextResponse.json({ error: 'Fehlender Slug' }, { status: 400 });
 
   await connectToDatabase();
 
   const event = await Event.findOne({ slug: slug });
-  if (!event) return NextResponse.json({ error: 'Event not found' }, { status: 404 });
+  if (!event) return NextResponse.json({ error: 'Event nicht gefunden' }, { status: 404 });
 
   if (event.password !== password)
     return NextResponse.json({ error: 'Falsches Passwort.' }, { status: 401 });
@@ -24,6 +25,7 @@ export async function POST(req: Request) {
   return NextResponse.json(images);
 }
 
+// single image file by uuid
 export async function GET(req: Request) {
   await connectToDatabase();
 
@@ -32,19 +34,19 @@ export async function GET(req: Request) {
   const uuid = searchParams.get('uuid');
 
   if (!uuid) {
-    return NextResponse.json({ error: 'Missing uuid' }, { status: 400 });
+    return NextResponse.json({ error: 'Fehlende UUID' }, { status: 400 });
   }
 
   // Fetch image metadata from MongoDB
   const image = await Image.findOne({ uuid });
 
   if (!image) {
-    return NextResponse.json({ error: 'Image not found' }, { status: 404 });
+    return NextResponse.json({ error: 'Bild nicht gefunden' }, { status: 404 });
   }
 
   const event = await Event.findById(image.event);
   if (!event) {
-    return NextResponse.json({ error: 'Associated event not found' }, { status: 404 });
+    return NextResponse.json({ error: 'Zugehöriger Event nicht gefunden' }, { status: 404 });
   }
 
   try {
@@ -63,7 +65,7 @@ export async function GET(req: Request) {
       },
     });
   } catch (err) {
-    return NextResponse.json({ error: 'Failed to read image file' + err }, { status: 500 });
+    return NextResponse.json({ error: 'Bild kann nicht gelesen werden: ' + err }, { status: 500 });
   }
 }
 
