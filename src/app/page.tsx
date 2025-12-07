@@ -1,7 +1,13 @@
 import IconList from '@/components/ui/icon-list';
 import { ExternalLink } from 'lucide-react';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: `Willkommen | foti-box.com`,
+  description: `foti-box.com | Miete die Foti-Box für deinen Event`,
+};
 
 const HomePage: React.FC = () => {
   return (

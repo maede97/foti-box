@@ -20,7 +20,7 @@ export const generateMetadata = async ({ params }: { params: ParamsType }) => {
 
   return {
     title: `${name} | foti-box.com`,
-    description: `foti-box.com Galerie für ${name}`,
+    description: `foti-box.com | Galerie für ${name}`,
   };
 };
 

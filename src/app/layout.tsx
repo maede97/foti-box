@@ -6,8 +6,11 @@ import { ReactNode } from 'react';
 
 export const metadata: Metadata = {
   title: 'foti-box.com',
-  description: 'Gallerie',
-  icons: '/favicon.ico',
+  description: 'Miete die Foti-Box für deinen Event!',
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
 };
 
 const montserrat = Montserrat({

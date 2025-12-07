@@ -2,18 +2,12 @@
 
 import { IBox } from '@/models/box';
 import { IEvent } from '@/models/event';
+import { IImage } from '@/models/image';
 import { motion } from 'framer-motion';
 import { ExternalLink, Plus, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-
-interface ImageType {
-  uuid: string;
-  url: string;
-  event: string;
-  createdAt: string;
-}
 
 function Modal({ title, onClose, children }) {
   return (
@@ -35,7 +29,7 @@ function Modal({ title, onClose, children }) {
 }
 
 export default function AdminPage() {
-  const [images, setImages] = useState<ImageType[]>([]);
+  const [images, setImages] = useState<IImage[]>([]);
   const [imagesForEvent, setImagesForEvent] = useState<IEvent | undefined>();
 
   const [eventName, setEventName] = useState('');
