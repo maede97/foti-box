@@ -1,4 +1,7 @@
 # foti-box-gallery
+<p align="center">
+  <img src="public/foti-box.png" width="350" title="hover text">
+</p>
 
 A small web-gui for my custom photobooth (consisting of a box with a Nikon camera and a Raspberry Pi controlling it).
 
