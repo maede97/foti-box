@@ -20,7 +20,6 @@ WORKDIR /app
 ENV BUILD_TARGET=production
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ARG NEXT_PUBLIC_APP_HOST_URL=https://foti-box.com
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .

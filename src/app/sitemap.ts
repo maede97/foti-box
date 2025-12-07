@@ -1,17 +1,22 @@
+import { environmentVariables } from '@/config/environment';
 import { MetadataRoute } from 'next';
 
 export default function siteamp(): MetadataRoute.Sitemap {
   return [
     {
-      url: 'https://foti-box.com',
+      url: environmentVariables.APP_HOST_URL,
       lastModified: new Date(),
       priority: 1,
     },
     {
-      url: 'https://foti-box.com/upload',
+      url: `${environmentVariables.APP_HOST_URL}/upload`,
       lastModified: new Date(),
-      changeFrequency: 'daily',
       priority: 0.8,
     },
+    {
+      url: `${environmentVariables.APP_HOST_URL}/upload`,
+      lastModified: new Date(),
+      priority: 0.8
+    }
   ];
 }

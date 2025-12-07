@@ -8,6 +8,7 @@ export const environmentVariables = createEnv({
     MONGO_URI: z.url(),
     UPLOAD_FOLDER: z.string(),
     JWT_SECRET: z.string(),
+    APP_HOST_URL: z.url(),
   },
   client: {},
   experimental__runtimeEnv: {},
