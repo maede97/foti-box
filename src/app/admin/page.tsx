@@ -5,10 +5,12 @@ import { IEvent } from '@/models/event';
 import { IImage } from '@/models/image';
 import { motion } from 'framer-motion';
 import { ExternalLink, Plus, X } from 'lucide-react';
-import { ObjectId } from 'mongoose';
+import { Types } from 'mongoose';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+
+type ObjectId = Types.ObjectId;
 
 function Modal({ title, onClose, children }) {
   return (
@@ -73,7 +75,7 @@ export default function AdminPage() {
     }
   }
 
-  async function switchActiveEvent(eventId: string) {
+  async function switchActiveEvent(eventId: ObjectId) {
     if (!token) return;
     const res = await fetch('/api/admin/switch-event', {
       method: 'POST',
@@ -129,7 +131,7 @@ export default function AdminPage() {
       return;
     }
     setImages(images.filter((img) => (img.event as unknown as ObjectId) !== eventID));
-    setEvents(events.filter((event) => event._id !== eventID));
+    setEvents(events.filter((event) => (event._id as unknown as ObjectId) !== eventID));
   }
   async function handleLogin() {
     setError('');
@@ -226,7 +228,7 @@ export default function AdminPage() {
     setShowAddBox(false);
   }
 
-  async function handleDeleteBox(boxID: string) {
+  async function handleDeleteBox(boxID: ObjectId) {
     if (!confirm('Bist du sicher, dass du diese Box löschen willst?')) return;
 
     const res = await fetch('/api/admin/box', {
@@ -243,10 +245,10 @@ export default function AdminPage() {
       setError(data.error || 'Box konnte nicht gelöscht werden.');
       return;
     }
-    setBoxes(boxes.filter((box) => box._id !== boxID));
+    setBoxes(boxes.filter((box) => (box._id as unknown as ObjectId) !== boxID));
   }
 
-  async function handleBoxActive(boxID: string, active: boolean) {
+  async function handleBoxActive(boxID: ObjectId, active: boolean) {
     const res = await fetch('/api/admin/box', {
       method: 'PUT',
       headers: {
@@ -264,7 +266,7 @@ export default function AdminPage() {
     fetchBoxes();
   }
 
-  async function handleSetAllowUserUpload(eventId: string, allow_user_uploads: boolean) {
+  async function handleSetAllowUserUpload(eventId: ObjectId, allow_user_uploads: boolean) {
     const res = await fetch('/api/admin/allow-user-uploads', {
       method: 'POST',
       headers: {
@@ -282,7 +284,7 @@ export default function AdminPage() {
   }
 
   async function handleAddLogo() {
-    const eventId = showAddLogo; // grab eventid from setState
+    const eventId = showAddLogo; // grab eventid from setState, as string
 
     if (!selectedLogo) {
       setError('Bitte zuerst eine Datei auswählen.');
@@ -317,7 +319,7 @@ export default function AdminPage() {
     }
   }
 
-  async function handleDeleteLogo(eventId: string) {
+  async function handleDeleteLogo(eventId: ObjectId) {
     if (!confirm('Bist du sicher, dass du dieses Logo löschen willst?')) return;
 
     const res = await fetch(`/api/admin/logo`, {
@@ -479,7 +481,7 @@ export default function AdminPage() {
           <tbody>
             {events.map((evt) => (
               <tr
-                key={evt._id}
+                key={evt._id as unknown as string}
                 className="border-accent text-primary bg-secondary mb-4 block rounded-xl border-b p-4 md:mb-0 md:table-row md:rounded-none md:bg-transparent md:p-0"
               >
                 <td className="block p-3 md:table-cell">
@@ -538,7 +540,7 @@ export default function AdminPage() {
                     <button
                       onClick={() => {
                         setError('');
-                        setShowAddLogo(evt._id);
+                        setShowAddLogo(evt._id as unknown as string);
                       }}
                       className="bg-primary text-secondary cursor-pointer rounded-xl px-4 py-2 font-semibold"
                     >
@@ -614,7 +616,7 @@ export default function AdminPage() {
           <tbody className="block md:table-row-group">
             {boxes.map((box) => (
               <tr
-                key={box._id}
+                key={box._id as unknown as string}
                 className="border-accent mb-4 block rounded-xl border-b p-4 md:mb-0 md:table-row md:rounded-none md:p-0"
               >
                 <td className="text-primary/70 block p-3 font-semibold md:table-cell">
