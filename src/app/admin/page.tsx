@@ -463,46 +463,64 @@ export default function AdminPage() {
           </button>
         </div>
 
-        <table className="bg-secondary w-full table-fixed overflow-hidden text-left shadow-lg">
-          <thead>
+        <table className="bg-secondary w-full overflow-hidden text-left shadow-lg md:table-fixed">
+          <thead className="hidden md:table-header-group">
             <tr className="bg-primary/80 text-secondary">
               <th className="p-3">Name</th>
               <th className="p-3">Slug</th>
               <th className="p-3">Passwort</th>
-              <th className="p-3">Gäste können hochladen</th>
+              <th className="p-3">Gäste Upload</th>
               <th className="p-3">Logo</th>
               <th className="p-3">Event aktiv</th>
               <th className="p-3">Aktionen</th>
             </tr>
           </thead>
+
           <tbody>
             {events.map((evt) => (
-              <tr key={evt._id} className="border-accent text-primary border-b">
-                <td className="p-3 font-semibold">
+              <tr
+                key={evt._id}
+                className="border-accent text-primary bg-secondary mb-4 block rounded-xl border-b p-4 md:mb-0 md:table-row md:rounded-none md:bg-transparent md:p-0"
+              >
+                <td className="block p-3 md:table-cell">
+                  <span className="text-primary/60 mb-1 block text-sm md:hidden">Name</span>
                   <Link
                     href={`/event/${evt.slug}`}
                     target="_blank"
-                    className="hover:decoration-accent-dark hover:text-accent-dark inline-flex items-center gap-1 hover:underline"
+                    className="inline-flex items-center gap-1 font-semibold hover:underline"
                   >
                     {evt.name} <ExternalLink className="size-4" />
                   </Link>
                 </td>
-                <td className="text-primary/70 p-3">{evt.slug}</td>
-                <td className="text-primary/70 p-3">{evt.password}</td>
-                <td className="p-3">
+
+                <td className="text-primary/70 block p-3 md:table-cell">
+                  <span className="text-primary/60 mb-1 block text-sm md:hidden">Slug</span>
+                  {evt.slug}
+                </td>
+
+                <td className="text-primary/70 block p-3 md:table-cell">
+                  <span className="text-primary/60 mb-1 block text-sm md:hidden">Passwort</span>
+                  {evt.password}
+                </td>
+
+                <td className="block p-3 md:table-cell">
+                  <span className="text-primary/60 mb-1 block text-sm md:hidden">Gäste Upload</span>
                   <button
                     onClick={() => handleSetAllowUserUpload(evt._id, !evt.allow_user_uploads)}
-                    className={`cursor-pointer rounded-xl px-3 py-1 font-semibold transition ${evt.allow_user_uploads ? 'bg-success hover:bg-success-dark' : 'bg-error hover:bg-error-dark'}`}
+                    className={`rounded-xl px-3 py-1 font-semibold transition ${
+                      evt.allow_user_uploads
+                        ? 'bg-success hover:bg-success-dark'
+                        : 'bg-error hover:bg-error-dark'
+                    }`}
                   >
                     {evt.allow_user_uploads ? 'Ja' : 'Nein'}
                   </button>
                 </td>
-                <td className="p-3">
+
+                <td className="block p-3 md:table-cell">
+                  <span className="text-primary/60 mb-1 block text-sm md:hidden">Logo</span>
                   {evt.logo ? (
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      className="relative overflow-hidden rounded-xl shadow-lg"
-                    >
+                    <div className="relative w-fit overflow-hidden rounded-xl shadow-lg">
                       <Image
                         alt={evt.logo}
                         width={100}
@@ -511,51 +529,57 @@ export default function AdminPage() {
                       />
                       <button
                         onClick={() => handleDeleteLogo(evt._id)}
-                        className="text-primary bg-error hover:bg-error-dark absolute top-4 right-4 z-50 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full transition"
+                        className="bg-error hover:bg-error-dark text-primary absolute top-2 right-2 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full"
                       >
                         <X />
                       </button>
-                    </motion.div>
+                    </div>
                   ) : (
                     <button
                       onClick={() => {
                         setError('');
                         setShowAddLogo(evt._id);
                       }}
-                      className="bg-primary text-secondary hover:bg-accent-dark inline-flex cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
+                      className="bg-primary text-secondary cursor-pointer rounded-xl px-4 py-2 font-semibold"
                     >
                       <Plus /> Logo setzen
                     </button>
                   )}
                 </td>
-                <td className="p-3">
+
+                <td className="block p-3 md:table-cell">
+                  <span className="text-primary/60 mb-1 block text-sm md:hidden">Event aktiv</span>
                   {evt.active ? (
                     <span className="text-success font-semibold">Aktiv</span>
                   ) : (
                     <button
                       onClick={() => switchActiveEvent(evt._id)}
-                      className="bg-primary text-secondary hover:bg-accent-dark cursor-pointer rounded-xl px-3 py-1 font-semibold transition"
+                      className="bg-primary text-secondary cursor-pointer rounded-xl px-3 py-1 font-semibold"
                     >
                       Setze Aktiv
                     </button>
                   )}
                 </td>
-                <td className="p-3 text-right">
-                  <button
-                    className="text-secondary bg-primary cursor-pointer rounded-xl px-3 py-1 font-semibold transition"
-                    onClick={() => {
-                      setImagesForEvent(evt);
-                      void fetchImages(evt);
-                    }}
-                  >
-                    Lade Bilder
-                  </button>
-                  <button
-                    onClick={() => handleDeleteEvent(evt._id)}
-                    className="bg-error hover:bg-error-dark cursor-pointer rounded-xl px-3 py-1 font-semibold transition"
-                  >
-                    Löschen
-                  </button>
+
+                <td className="block p-3 md:table-cell md:text-right">
+                  <span className="text-primary/60 mb-1 block text-sm md:hidden">Aktionen</span>
+                  <div className="flex flex-wrap gap-2 md:justify-end">
+                    <button
+                      className="bg-primary text-secondary cursor-pointer rounded-xl px-3 py-1 font-semibold"
+                      onClick={() => {
+                        setImagesForEvent(evt);
+                        void fetchImages(evt);
+                      }}
+                    >
+                      Lade Bilder
+                    </button>
+                    <button
+                      onClick={() => handleDeleteEvent(evt._id)}
+                      className="bg-error hover:bg-error-dark cursor-pointer rounded-xl px-3 py-1 font-semibold"
+                    >
+                      Löschen
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -563,7 +587,6 @@ export default function AdminPage() {
         </table>
       </section>
 
-      {/* Boxes Table */}
       <section className="mb-10">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-2xl font-semibold">Boxen</h2>
@@ -578,25 +601,41 @@ export default function AdminPage() {
           </button>
         </div>
 
-        <table className="bg-secondary w-full overflow-hidden text-left shadow-lg">
-          <thead>
+        <table className="bg-secondary w-full text-left shadow-lg md:table">
+          <thead className="hidden md:table-header-group">
             <tr className="bg-primary/80 text-secondary">
               <th className="p-3">Label</th>
-              <th className="p-3">Letzer Upload</th>
+              <th className="p-3">Letzter Upload</th>
               <th className="p-3">Zugangstoken</th>
               <th className="p-3">Status</th>
               <th className="p-3">Aktionen</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="block md:table-row-group">
             {boxes.map((box) => (
-              <tr key={box._id} className="border-accent text-primary border-b">
-                <td className="p-3 font-semibold">{box.label}</td>
-                <td className="text-primary/70 p-3">
+              <tr
+                key={box._id}
+                className="border-accent mb-4 block rounded-xl border-b p-4 md:mb-0 md:table-row md:rounded-none md:p-0"
+              >
+                <td className="block p-3 font-semibold md:table-cell">
+                  <span className="text-primary/60 mb-1 block text-xs md:hidden">Label</span>
+                  {box.label}
+                </td>
+
+                <td className="text-primary/70 block p-3 md:table-cell">
+                  <span className="text-primary/60 mb-1 block text-xs md:hidden">
+                    Letzter Upload
+                  </span>
                   {box.lastUpload ? new Date(box.lastUpload).toLocaleString('de-CH') : 'Never'}
                 </td>
-                <td className="text-primary/70 p-3">{box.accessToken}</td>
-                <td className="p-3">
+
+                <td className="text-primary/70 block p-3 break-all md:table-cell">
+                  <span className="text-primary/60 mb-1 block text-xs md:hidden">Zugangstoken</span>
+                  {box.accessToken}
+                </td>
+
+                <td className="block p-3 md:table-cell">
+                  <span className="text-primary/60 mb-1 block text-xs md:hidden">Status</span>
                   {box.active ? (
                     <button
                       onClick={() => handleBoxActive(box._id, false)}
@@ -613,7 +652,9 @@ export default function AdminPage() {
                     </button>
                   )}
                 </td>
-                <td className="p-3 text-right">
+
+                <td className="block p-3 md:table-cell md:text-right">
+                  <span className="text-primary/60 mb-1 block text-xs md:hidden">Aktionen</span>
                   <button
                     onClick={() => handleDeleteBox(box._id)}
                     className="bg-error hover:bg-error-dark cursor-pointer rounded-xl px-3 py-1 font-semibold transition"
