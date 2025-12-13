@@ -1,0 +1,42 @@
+services:
+  mongo:
+    image: mongo:6.0
+    restart: always
+    volumes:
+      - ./mongo-data:/data/db
+    networks:
+      - default
+    logging:
+      driver: none
+
+  app:
+    image: ghcr.io/maede97/foti-box:dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - APP_HOST_URL=https://dev.foti-box.com
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+    networks:
+      - default
+      - traefik-proxy
+
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=traefik-proxy'
+      - 'traefik.http.routers.dev-foti-box.rule=Host(`dev.foti-box.com`)'
+      - 'traefik.http.routers.dev-foti-box.entrypoints=websecure'
+      - 'traefik.http.routers.dev-foti-box.tls=true'
+      - 'traefik.http.routers.dev-foti-box.tls.certresolver=letsencrypt'
+      - 'traefik.http.services.dev-foti-box.loadbalancer.server.port=3000'
+
+    volumes:
+      - ./uploads:/data/uploads
+
+networks:
+  traefik-proxy:
+    external: true
