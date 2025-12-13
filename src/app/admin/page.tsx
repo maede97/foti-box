@@ -1,5 +1,6 @@
 'use client';
 
+import { environmentVariables } from '@/config/environment';
 import { IBox } from '@/models/box';
 import { IEvent } from '@/models/event';
 import { IImage } from '@/models/image';
@@ -446,7 +447,7 @@ export default function AdminPage() {
           onClick={handleLogout}
           className="bg-error hover:bg-error-dark cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
         >
-          Logout
+          Abmelden
         </button>
       </div>
 
@@ -502,7 +503,22 @@ export default function AdminPage() {
 
                 <td className="text-primary/70 block p-3 md:table-cell">
                   <span className="text-primary/60 mb-1 block text-sm md:hidden">Passwort</span>
-                  {evt.password}
+                  {navigator && typeof navigator.share === 'function' && evt.password ? (
+                    <span
+                      className="inline-flex cursor-pointer items-center gap-1 font-semibold hover:underline"
+                      onClick={() => {
+                        navigator.share({
+                          title: 'foti-box.com',
+                          url: `${environmentVariables.NEXT_PUBLIC_APP_HOST_URL}/event/${evt.slug}`,
+                          text: `Sieh dir die Galerie ${evt.name} an und benutze dazu das Passwort ${evt.password}`,
+                        });
+                      }}
+                    >
+                      {evt.password} <ExternalLink className="size-4" />
+                    </span>
+                  ) : (
+                    evt.password
+                  )}
                 </td>
 
                 <td className="block p-3 md:table-cell">

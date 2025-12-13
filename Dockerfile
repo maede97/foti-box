@@ -23,9 +23,13 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 ARG APP_HOST_URL
 ENV APP_HOST_URL=${APP_HOST_URL}
+ARG NEXT_PUBLIC_APP_HOST_URL
+ENV NEXT_PUBLIC_APP_HOST_URL=${NEXT_PUBLIC_APP_HOST_URL}
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
+RUN sh create_build_info.sh
 
 RUN corepack enable pnpm && pnpm run build --webpack
 

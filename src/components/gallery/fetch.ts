@@ -14,6 +14,8 @@ export async function fetchGallery(eventSlug, password, setError, setImages, set
     return;
   }
 
+  localStorage.setItem(`event-${eventSlug}`, password);
+
   const data = await res.json();
   setImages(data.map((img: { uuid: string }) => img.uuid));
   setLoggedIn(true);
