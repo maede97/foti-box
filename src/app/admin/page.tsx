@@ -75,7 +75,7 @@ export default function AdminPage() {
     }
   }
 
-  async function switchActiveEvent(eventId: Schema.Types.ObjectId) {
+  async function switchActiveEvent(eventId: ObjectId) {
     if (!token) return;
     const res = await fetch('/api/admin/switch-event', {
       method: 'POST',
