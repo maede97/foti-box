@@ -19,6 +19,13 @@ const EventPageClient: React.FC<{
     }
   }, [doesNotRequirePassword, eventSlug]);
 
+  useEffect(() => {
+    const savedPassword = localStorage.getItem(`event-${eventSlug}`);
+    if (savedPassword) {
+      void fetchGallery(eventSlug, savedPassword, setError, setImages, setLoggedIn);
+    }
+  }, [eventSlug]);
+
   return (
     <div className="m-6">
       {!loggedIn && (

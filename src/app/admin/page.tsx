@@ -446,7 +446,7 @@ export default function AdminPage() {
           onClick={handleLogout}
           className="bg-error hover:bg-error-dark cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
         >
-          Logout
+          Abmelden
         </button>
       </div>
 
