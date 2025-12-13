@@ -16,6 +16,7 @@ Visit [foti-box.com](https://foti-box.com)!
 - pnpm package manager
 
 ## Developer Setup
+
 ```
 cp env.example .env
 docker compose up -d mongo mongo-express

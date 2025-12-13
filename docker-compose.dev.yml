@@ -16,6 +16,7 @@ services:
       dockerfile: Dockerfile
       args:
         - APP_HOST_URL=https://dev.foti-box.com
+        - NEXT_PUBLIC_APP_HOST_URL=https://dev.foti-box.com
     restart: always
     env_file:
       - .env

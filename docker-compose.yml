@@ -23,12 +23,13 @@ services:
       dockerfile: Dockerfile
       args:
         - APP_HOST_URL=http://localhost:3000
+        - NEXT_PUBLIC_APP_HOST_URL=http://localhost:3000
     ports:
       - 3000:3000
     depends_on:
       - mongo
     volumes:
-      - ./uploads-docker:/data/uploads
+      - ./uploads:/data/uploads
     env_file:
       - .env.docker
 

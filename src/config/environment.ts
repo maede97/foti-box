@@ -3,15 +3,15 @@ import { z } from 'zod';
 
 export const environmentVariables = createEnv({
   server: {
-    INIT_ADMIN_USERNAME: z.string(),
-    INIT_ADMIN_PW: z.string(),
     MONGO_URI: z.url(),
     UPLOAD_FOLDER: z.string(),
     JWT_SECRET: z.string(),
     APP_HOST_URL: z.url(),
   },
-  client: {},
-  experimental__runtimeEnv: {},
+  client: {
+    NEXT_PUBLIC_APP_HOST_URL: z.url(),
+  },
+  experimental__runtimeEnv: { NEXT_PUBLIC_APP_HOST_URL: process.env['NEXT_PUBLIC_APP_HOST_URL'] },
   emptyStringAsUndefined: true,
 
   skipValidation: process.env['BUILD_TARGET'] === 'production',
