@@ -5,12 +5,12 @@ import { IEvent } from '@/models/event';
 import { IImage } from '@/models/image';
 import { motion } from 'framer-motion';
 import { ExternalLink, Plus, X } from 'lucide-react';
-import { Schema } from 'mongoose';
+import { Types } from 'mongoose';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-type ObjectId = Schema.Types.ObjectId;
+type ObjectId = Types.ObjectId;
 
 function Modal({ title, onClose, children }) {
   return (
