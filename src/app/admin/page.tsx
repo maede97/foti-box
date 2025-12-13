@@ -73,7 +73,7 @@ export default function AdminPage() {
     }
   }
 
-  async function switchActiveEvent(eventId: string) {
+  async function switchActiveEvent(eventId: ObjectId) {
     if (!token) return;
     const res = await fetch('/api/admin/switch-event', {
       method: 'POST',
@@ -226,7 +226,7 @@ export default function AdminPage() {
     setShowAddBox(false);
   }
 
-  async function handleDeleteBox(boxID: string) {
+  async function handleDeleteBox(boxID: ObjectId) {
     if (!confirm('Bist du sicher, dass du diese Box löschen willst?')) return;
 
     const res = await fetch('/api/admin/box', {
@@ -243,10 +243,10 @@ export default function AdminPage() {
       setError(data.error || 'Box konnte nicht gelöscht werden.');
       return;
     }
-    setBoxes(boxes.filter((box) => box._id !== boxID));
+    setBoxes(boxes.filter((box) => (box._id as unknown as ObjectId) !== boxID));
   }
 
-  async function handleBoxActive(boxID: string, active: boolean) {
+  async function handleBoxActive(boxID: ObjectId, active: boolean) {
     const res = await fetch('/api/admin/box', {
       method: 'PUT',
       headers: {
@@ -264,7 +264,7 @@ export default function AdminPage() {
     fetchBoxes();
   }
 
-  async function handleSetAllowUserUpload(eventId: string, allow_user_uploads: boolean) {
+  async function handleSetAllowUserUpload(eventId: ObjectId, allow_user_uploads: boolean) {
     const res = await fetch('/api/admin/allow-user-uploads', {
       method: 'POST',
       headers: {
@@ -317,7 +317,7 @@ export default function AdminPage() {
     }
   }
 
-  async function handleDeleteLogo(eventId: string) {
+  async function handleDeleteLogo(eventId: ObjectId) {
     if (!confirm('Bist du sicher, dass du dieses Logo löschen willst?')) return;
 
     const res = await fetch(`/api/admin/logo`, {
