@@ -507,7 +507,7 @@ export default function AdminPage() {
                   <span className="text-primary/60 mb-1 block text-sm md:hidden">Gäste Upload</span>
                   <button
                     onClick={() => handleSetAllowUserUpload(evt._id, !evt.allow_user_uploads)}
-                    className={`rounded-xl px-3 py-1 font-semibold transition ${
+                    className={`cursor-pointer rounded-xl px-3 py-1 font-semibold transition ${
                       evt.allow_user_uploads
                         ? 'bg-success hover:bg-success-dark'
                         : 'bg-error hover:bg-error-dark'

@@ -1,3 +1,4 @@
+import Footer from '@/components/ui/footer';
 import { connectToDatabase } from '@/lib/mongodb';
 import image from '@/models/image';
 import GallerySingleImageClient from '@/pages/gallery-single-image-client';
@@ -20,8 +21,12 @@ const GalleryPage: React.FC<{ params: ParamsType }> = async ({ params }) => {
   }
 
   return (
-    <div className="m-6">
-      <GallerySingleImageClient uuid={uuid} />
+    <div className="flex min-h-screen flex-col">
+      <main className="m-6 flex-1">
+        <GallerySingleImageClient uuid={uuid} />
+      </main>
+
+      <Footer />
     </div>
   );
 };
