@@ -617,7 +617,7 @@ export default function AdminPage() {
                 key={box._id}
                 className="border-accent mb-4 block rounded-xl border-b p-4 md:mb-0 md:table-row md:rounded-none md:p-0"
               >
-                <td className="block p-3 font-semibold md:table-cell">
+                <td className="text-primary/70 block p-3 font-semibold md:table-cell">
                   <span className="text-primary/60 mb-1 block text-xs md:hidden">Label</span>
                   {box.label}
                 </td>
