@@ -284,7 +284,7 @@ export default function AdminPage() {
   }
 
   async function handleAddLogo() {
-    const eventId = showAddLogo; // grab eventid from setState
+    const eventId = showAddLogo; // grab eventid from setState, as string
 
     if (!selectedLogo) {
       setError('Bitte zuerst eine Datei auswählen.');
@@ -540,7 +540,7 @@ export default function AdminPage() {
                     <button
                       onClick={() => {
                         setError('');
-                        setShowAddLogo(evt._id);
+                        setShowAddLogo(evt._id as unknown as string);
                       }}
                       className="bg-primary text-secondary cursor-pointer rounded-xl px-4 py-2 font-semibold"
                     >
