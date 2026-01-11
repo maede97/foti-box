@@ -25,6 +25,7 @@ const GalleryLogin: React.FC<{
           <input
             type="password"
             placeholder="••••••••"
+            autoFocus
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={(e) => {
