@@ -1,19 +1,19 @@
 {
   "name": "foti-box-gallery",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
-  "type": "module",
   "author": {
     "name": "Matthias Hüppi",
     "email": "maede97@hotmail.com"
   },
+  "type": "module",
   "scripts": {
-    "dev": "next dev -p 3000",
     "build": "next build",
-    "start": "next start -p 3000",
+    "dev": "next dev -p 3000",
     "lint": "eslint -c eslint.config.mjs --fix --quiet .",
     "lint-staged": "lint-staged",
-    "prettier": "prettier --config .prettierrc.json --write ."
+    "prettier": "prettier --config .prettierrc.json --write .",
+    "start": "next start -p 3000"
   },
   "lint-staged": {
     "**/package.json": "sort-package-json",
@@ -59,8 +59,8 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
+  "packageManager": "pnpm@10.28.0+sha512.05df71d1421f21399e053fde567cea34d446fa02c76571441bfc1c7956e98e363088982d940465fd34480d4d90a0668bc12362f8aa88000a64e83d0b0e47be48",
   "engines": {
     "node": ">=24.4.0"
-  },
-  "packageManager": "pnpm@10.28.0+sha512.05df71d1421f21399e053fde567cea34d446fa02c76571441bfc1c7956e98e363088982d940465fd34480d4d90a0668bc12362f8aa88000a64e83d0b0e47be48"
+  }
 }
