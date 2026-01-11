@@ -12,38 +12,49 @@
     "build": "next build",
     "start": "next start -p 3000",
     "lint": "eslint -c eslint.config.mjs --fix --quiet .",
+    "lint-staged": "lint-staged",
     "prettier": "prettier --config .prettierrc.json --write ."
   },
+  "lint-staged": {
+    "**/package.json": "sort-package-json",
+    "*.{md,mdx,yml,json}": "prettier --write",
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --cache --fix"
+    ]
+  },
   "dependencies": {
-    "@t3-oss/env-nextjs": "^0.13.8",
+    "@t3-oss/env-nextjs": "^0.13.10",
     "bcrypt": "^6.0.0",
-    "framer-motion": "^12.23.26",
+    "framer-motion": "^12.25.0",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.561.0",
     "mongodb": "^7.0.0",
-    "mongoose": "^9.0.1",
-    "next": "^16.0.10",
+    "mongoose": "^9.1.2",
+    "next": "^16.1.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "sharp": "^0.34.5",
     "uuid": "^13.0.0",
-    "zod": "^4.1.13"
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",
     "@types/bcrypt": "^6.0.0",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^25.0.1",
-    "@types/react": "^19.2.7",
+    "@types/node": "^25.0.6",
+    "@types/react": "^19.2.8",
     "@types/react-dom": "19.2.3",
     "babel-plugin-react-compiler": "^1.0.0",
-    "baseline-browser-mapping": "^2.9.7",
+    "baseline-browser-mapping": "^2.9.14",
     "eslint": "^9.39.2",
-    "eslint-config-next": "^16.0.10",
+    "eslint-config-next": "^16.1.1",
+    "lint-staged": "^16.2.7",
     "postcss": "^8.5.6",
     "prettier": "^3.7.4",
     "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-tailwindcss": "^0.7.2",
+    "sort-package-json": "^3.6.0",
     "tailwindcss": "^4.1.18",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
@@ -51,5 +62,5 @@
   "engines": {
     "node": ">=24.4.0"
   },
-  "packageManager": "pnpm@10.24.0+sha512.01ff8ae71b4419903b65c60fb2dc9d34cf8bb6e06d03bde112ef38f7a34d6904c424ba66bea5cdcf12890230bf39f9580473140ed9c946fef328b6e5238a345a"
+  "packageManager": "pnpm@10.28.0+sha512.05df71d1421f21399e053fde567cea34d446fa02c76571441bfc1c7956e98e363088982d940465fd34480d4d90a0668bc12362f8aa88000a64e83d0b0e47be48"
 }
