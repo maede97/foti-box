@@ -8,6 +8,7 @@ import fs from 'fs/promises';
 import { ObjectId } from 'mongoose';
 import { NextResponse } from 'next/server';
 import path from 'path';
+import sharp from 'sharp';
 import { v4 as uuidv4 } from 'uuid';
 
 const uploadFile = async (file: File, eventId: ObjectId) => {
@@ -24,6 +25,10 @@ const uploadFile = async (file: File, eventId: ObjectId) => {
   // Save file to filesystem
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
+
+  // Calculate aspect ratio
+  const metadata = await sharp(buffer).metadata();
+  const aspectRatio = metadata.width! / metadata.height!;
 
   const event = await Event.findById(eventId);
 
@@ -42,6 +47,7 @@ const uploadFile = async (file: File, eventId: ObjectId) => {
   const image = new Image({
     uuid: fileUuid,
     extension: fileExtension,
+    aspectRatio: aspectRatio,
     event: eventId,
   });
 

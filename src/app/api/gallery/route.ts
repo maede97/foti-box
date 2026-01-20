@@ -29,11 +29,13 @@ export async function POST(req: Request) {
     .limit(limitNum);
 
   if (!full) {
-    query.select('uuid');
+    query.select('uuid aspectRatio');
   }
 
   const images = await query;
-  const result = full ? images : images.map((img) => img.uuid);
+  const result = full
+    ? images
+    : images.map((img) => ({ uuid: img.uuid, aspectRatio: img.aspectRatio }));
 
   return NextResponse.json(result);
 }

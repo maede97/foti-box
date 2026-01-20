@@ -3,7 +3,7 @@ export async function fetchGalleryPage(
   password: string,
   page: number = 1,
   limit: number = 15,
-): Promise<string[]> {
+): Promise<{ uuid: string; aspectRatio?: number }[]> {
   const res = await fetch('/api/gallery', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

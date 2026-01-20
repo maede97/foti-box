@@ -9,7 +9,7 @@ const EventPageClient: React.FC<{
   eventSlug: string;
   doesNotRequirePassword: boolean;
 }> = ({ eventName, eventSlug, doesNotRequirePassword }) => {
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<{ uuid: string; aspectRatio?: number }[]>([]);
   const [error, setError] = useState('');
   const [loggedIn, setLoggedIn] = useState(doesNotRequirePassword);
   const [currentPassword, setCurrentPassword] = useState('');
