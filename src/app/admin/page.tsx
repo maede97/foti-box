@@ -675,7 +675,7 @@ export default function AdminPage() {
                   <span className="text-primary/60 mb-1 block text-xs md:hidden">
                     Letzter Upload
                   </span>
-                  {box.lastUpload ? new Date(box.lastUpload).toLocaleString('de-CH') : 'Never'}
+                  {box.lastUpload ? new Date(box.lastUpload).toLocaleString('de-CH') : 'Nie'}
                 </td>
 
                 <td className="text-primary/70 block p-3 break-all md:table-cell">
