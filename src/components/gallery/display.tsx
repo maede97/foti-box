@@ -4,10 +4,17 @@ import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 import Footer from '../ui/footer';
 
-const GalleryDisplay: React.FC<{ images: string[]; title: string }> = ({ images, title }) => {
+const GalleryDisplay: React.FC<{
+  images: string[];
+  title: string;
+  onLoadMore: () => void;
+  hasMore: boolean;
+  isLoadingMore: boolean;
+  displayedCount: number;
+  setDisplayedCount: React.Dispatch<React.SetStateAction<number>>;
+}> = ({ images, title, onLoadMore, hasMore, isLoadingMore, displayedCount, setDisplayedCount }) => {
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const [direction, setDirection] = useState<number>(0);
-  const [displayedCount, setDisplayedCount] = useState<number>(25);
 
   const openGallery = useCallback((index: number) => setCurrentIndex(index), []);
   const closeGallery = useCallback(() => setCurrentIndex(null), []);
@@ -57,13 +64,20 @@ const GalleryDisplay: React.FC<{ images: string[]; title: string }> = ({ images,
             ))}
           </div>
 
-          {displayedCount < images.length && (
+          {(displayedCount < images.length || hasMore) && (
             <div className="mt-8 text-center">
               <button
-                onClick={() => setDisplayedCount((prev) => Math.min(prev + 25, images.length))}
-                className="bg-secondary text-primary hover:bg-accent rounded px-6 py-2"
+                onClick={() => {
+                  if (displayedCount >= images.length && hasMore) {
+                    onLoadMore();
+                  } else {
+                    setDisplayedCount((prev) => Math.min(prev + 15, images.length));
+                  }
+                }}
+                disabled={isLoadingMore}
+                className="bg-primary text-secondary hover:bg-accent border-secondary cursor-pointer rounded border px-6 py-2 font-semibold tracking-wide uppercase disabled:opacity-50"
               >
-                Mehr laden
+                {isLoadingMore ? 'Laden...' : 'Mehr laden'}
               </button>
             </div>
           )}

@@ -167,23 +167,38 @@ export default function AdminPage() {
     setError('');
     setImages([]);
     try {
-      const res = await fetch('/api/gallery', {
-        headers: { Authorization: `Bearer ${token}` },
-        method: 'POST',
-        body: JSON.stringify({ slug: event.slug, password: event.password }),
-      });
-      if (!res.ok) {
-        if (res.status === 401) {
-          return handleLogout();
-        }
+      const allImages: IImage[] = [];
+      let page = 1;
+      const limit = 100; // fetch in larger batches for admin
+      while (true) {
+        const res = await fetch('/api/gallery', {
+          headers: { Authorization: `Bearer ${token}` },
+          method: 'POST',
+          body: JSON.stringify({
+            slug: event.slug,
+            password: event.password,
+            full: true,
+            page,
+            limit,
+          }),
+        });
+        if (!res.ok) {
+          if (res.status === 401) {
+            return handleLogout();
+          }
 
+          const data = await res.json();
+          setError(data.error || 'Bilder konnten nicht geladen werden.');
+          setLoading(false);
+          return;
+        }
         const data = await res.json();
-        setError(data.error || 'Bilder konnten nicht geladen werden.');
-        setLoading(false);
-        return;
+        if (data.length === 0) break;
+        allImages.push(...data);
+        page++;
+        if (data.length < limit) break; // last page
       }
-      const data = await res.json();
-      setImages(data);
+      setImages(allImages);
       setLoading(false);
     } catch (err) {
       setError(err || 'Bilder konnten nicht geladen werden.');
