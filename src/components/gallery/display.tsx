@@ -7,6 +7,7 @@ import Footer from '../ui/footer';
 const GalleryDisplay: React.FC<{ images: string[]; title: string }> = ({ images, title }) => {
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const [direction, setDirection] = useState<number>(0);
+  const [displayedCount, setDisplayedCount] = useState<number>(25);
 
   const openGallery = useCallback((index: number) => setCurrentIndex(index), []);
   const closeGallery = useCallback(() => setCurrentIndex(null), []);
@@ -40,11 +41,11 @@ const GalleryDisplay: React.FC<{ images: string[]; title: string }> = ({ images,
             {title || 'Galerie'}
           </h1>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {images.map((uuid, index) => (
+            {images.slice(0, displayedCount).map((uuid) => (
               <div
                 key={uuid}
                 className="relative aspect-16/9 cursor-pointer overflow-hidden bg-neutral-100"
-                onClick={() => openGallery(index)}
+                onClick={() => openGallery(images.indexOf(uuid))}
               >
                 <Image
                   src={`/api/gallery?uuid=${uuid}`}
@@ -55,6 +56,17 @@ const GalleryDisplay: React.FC<{ images: string[]; title: string }> = ({ images,
               </div>
             ))}
           </div>
+
+          {displayedCount < images.length && (
+            <div className="mt-8 text-center">
+              <button
+                onClick={() => setDisplayedCount((prev) => Math.min(prev + 25, images.length))}
+                className="bg-secondary text-primary hover:bg-accent rounded px-6 py-2"
+              >
+                Mehr laden
+              </button>
+            </div>
+          )}
 
           <AnimatePresence custom={direction}>
             {currentIndex !== null && (
