@@ -45,6 +45,9 @@ export default function AdminPage() {
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const [adminUsername, setAdminUsername] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
@@ -162,49 +165,60 @@ export default function AdminPage() {
     setLoggedIn(false);
   }
 
-  async function fetchImages(event: IEvent) {
-    setLoading(true);
+  async function fetchImages(event: IEvent, page: number = 1) {
+    setLoading(page === 1);
     setError('');
-    setImages([]);
+    if (page === 1) {
+      setImages([]);
+      setCurrentPage(1);
+      setHasMore(true);
+    }
     try {
-      const allImages: IImage[] = [];
-      let page = 1;
-      const limit = 100; // fetch in larger batches for admin
-      while (true) {
-        const res = await fetch('/api/gallery', {
-          headers: { Authorization: `Bearer ${token}` },
-          method: 'POST',
-          body: JSON.stringify({
-            slug: event.slug,
-            password: event.password,
-            full: true,
-            page,
-            limit,
-          }),
-        });
-        if (!res.ok) {
-          if (res.status === 401) {
-            return handleLogout();
-          }
-
-          const data = await res.json();
-          setError(data.error || 'Bilder konnten nicht geladen werden.');
-          setLoading(false);
-          return;
+      const limit = 25;
+      const res = await fetch('/api/gallery', {
+        headers: { Authorization: `Bearer ${token}` },
+        method: 'POST',
+        body: JSON.stringify({
+          slug: event.slug,
+          password: event.password,
+          full: true,
+          page,
+          limit,
+        }),
+      });
+      if (!res.ok) {
+        if (res.status === 401) {
+          return handleLogout();
         }
+
         const data = await res.json();
-        if (data.length === 0) break;
-        allImages.push(...data);
-        page++;
-        if (data.length < limit) break; // last page
+        setError(data.error || 'Bilder konnten nicht geladen werden.');
+        setLoading(false);
+        setIsLoadingMore(false);
+        return;
       }
-      setImages(allImages);
+      const data = await res.json();
+      if (page === 1) {
+        setImages(data);
+      } else {
+        setImages((prev) => [...prev, ...data]);
+      }
+      setHasMore(data.length === limit);
+      setCurrentPage(page);
       setLoading(false);
+      setIsLoadingMore(false);
     } catch (err) {
-      setError(err || 'Bilder konnten nicht geladen werden.');
+      setError(err.message || 'Bilder konnten nicht geladen werden.');
       setLoading(false);
+      setIsLoadingMore(false);
     }
   }
+
+  const loadMore = () => {
+    if (isLoadingMore || !hasMore || !imagesForEvent) return;
+    setIsLoadingMore(true);
+    fetchImages(imagesForEvent, currentPage + 1);
+  };
 
   async function fetchBoxes() {
     if (!token) return;
@@ -743,31 +757,44 @@ export default function AdminPage() {
           ) : images.length === 0 ? (
             <p>Keine Bilder vorhanden.</p>
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-              {images.map((img) => (
-                <motion.div
-                  key={img.uuid}
-                  whileHover={{ scale: 1.05 }}
-                  className="relative overflow-hidden rounded-xl shadow-lg"
-                >
-                  <Link href={`/gallery/${img.uuid}`} target="_blank">
-                    <Image
-                      src={`/api/gallery?uuid=${img.uuid}`}
-                      alt="foti-box.com"
-                      width={300}
-                      height={200}
-                      className="h-40 w-full object-cover"
-                    />
-                  </Link>
-                  <button
-                    onClick={() => handleDeleteImage(img.uuid)}
-                    className="text-primary bg-error hover:bg-error-dark absolute top-4 right-4 z-50 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full transition"
+            <>
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                {images.map((img) => (
+                  <motion.div
+                    key={img.uuid}
+                    whileHover={{ scale: 1.05 }}
+                    className="relative overflow-hidden rounded-xl shadow-lg"
                   >
-                    <X />
+                    <Link href={`/gallery/${img.uuid}`} target="_blank">
+                      <Image
+                        src={`/api/gallery?uuid=${img.uuid}`}
+                        alt="foti-box.com"
+                        width={300}
+                        height={200}
+                        className="h-40 w-full object-cover"
+                      />
+                    </Link>
+                    <button
+                      onClick={() => handleDeleteImage(img.uuid)}
+                      className="text-primary bg-error hover:bg-error-dark absolute top-4 right-4 z-50 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full transition"
+                    >
+                      <X />
+                    </button>
+                  </motion.div>
+                ))}
+              </div>
+              {hasMore || isLoadingMore ? (
+                <div className="mt-8 text-center">
+                  <button
+                    onClick={loadMore}
+                    disabled={isLoadingMore}
+                    className="bg-primary text-secondary hover:bg-accent-dark border-secondary cursor-pointer rounded border px-6 py-2 font-semibold tracking-wide uppercase disabled:opacity-50"
+                  >
+                    {isLoadingMore ? 'Laden...' : 'Mehr laden'}
                   </button>
-                </motion.div>
-              ))}
-            </div>
+                </div>
+              ) : null}
+            </>
           )}
         </section>
       )}
