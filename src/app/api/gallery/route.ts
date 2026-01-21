@@ -8,9 +8,12 @@ import path from 'path';
 
 // all images in gallery by password
 export async function POST(req: Request) {
-  const { slug, password } = await req.json();
+  const { slug, password, page = 1, limit = 25, full = false } = await req.json();
 
   if (!slug) return NextResponse.json({ error: 'Fehlender Slug' }, { status: 400 });
+
+  const pageNum = Math.max(1, Number(page) || 1);
+  const limitNum = Math.min(100, Math.max(1, Number(limit) || 15));
 
   await connectToDatabase();
 
@@ -20,9 +23,21 @@ export async function POST(req: Request) {
   if (event.password !== password)
     return NextResponse.json({ error: 'Falsches Passwort.' }, { status: 401 });
 
-  const images = await Image.find({ event: event._id }).sort({ createdAt: -1 });
+  const query = Image.find({ event: event._id })
+    .sort({ createdAt: -1 })
+    .skip((pageNum - 1) * limitNum)
+    .limit(limitNum);
 
-  return NextResponse.json(images);
+  if (!full) {
+    query.select('uuid aspectRatio');
+  }
+
+  const images = await query;
+  const result = full
+    ? images
+    : images.map((img) => ({ uuid: img.uuid, aspectRatio: img.aspectRatio }));
+
+  return NextResponse.json(result);
 }
 
 // single image file by uuid

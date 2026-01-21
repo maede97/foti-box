@@ -4,12 +4,25 @@ import Image from 'next/image';
 import { useCallback, useEffect, useState } from 'react';
 import Footer from '../ui/footer';
 
-const GalleryDisplay: React.FC<{ images: string[]; title: string }> = ({ images, title }) => {
+const GalleryDisplay: React.FC<{
+  images: { uuid: string; aspectRatio?: number }[];
+  title: string;
+  onLoadMore: () => void;
+  hasMore: boolean;
+  isLoadingMore: boolean;
+  displayedCount: number;
+  setDisplayedCount: React.Dispatch<React.SetStateAction<number>>;
+}> = ({ images, title, onLoadMore, hasMore, isLoadingMore, displayedCount, setDisplayedCount }) => {
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const [direction, setDirection] = useState<number>(0);
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
 
   const openGallery = useCallback((index: number) => setCurrentIndex(index), []);
   const closeGallery = useCallback(() => setCurrentIndex(null), []);
+
+  const handleImageLoadComplete = useCallback((uuid: string) => {
+    setLoadedImages((prev) => new Set(prev).add(uuid));
+  }, []);
 
   const prevImage = useCallback(() => {
     setDirection(-1);
@@ -40,21 +53,52 @@ const GalleryDisplay: React.FC<{ images: string[]; title: string }> = ({ images,
             {title || 'Galerie'}
           </h1>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {images.map((uuid, index) => (
+            {images.slice(0, displayedCount).map((image, index) => (
               <div
-                key={uuid}
-                className="relative aspect-16/9 cursor-pointer overflow-hidden bg-neutral-100"
+                key={image.uuid}
+                className="relative flex cursor-pointer items-center justify-center overflow-hidden bg-neutral-100"
+                style={{ aspectRatio: 16 / 9 }}
                 onClick={() => openGallery(index)}
               >
                 <Image
-                  src={`/api/gallery?uuid=${uuid}`}
+                  src={`/api/gallery?uuid=${image.uuid}`}
                   alt="Photo"
-                  fill
-                  className="bg-primary object-contain"
+                  width={
+                    (image.aspectRatio || 16 / 9) > 16 / 9
+                      ? Math.round(225 * (image.aspectRatio || 16 / 9))
+                      : 400
+                  }
+                  height={
+                    (image.aspectRatio || 16 / 9) > 16 / 9
+                      ? 225
+                      : Math.round(400 / (image.aspectRatio || 16 / 9))
+                  }
+                  className={`bg-primary object-contain ${
+                    !loadedImages.has(image.uuid) ? 'bg-secondary blur-sm' : ''
+                  }`}
+                  onLoad={() => handleImageLoadComplete(image.uuid)}
                 />
               </div>
             ))}
           </div>
+
+          {(displayedCount < images.length || hasMore) && (
+            <div className="mt-8 text-center">
+              <button
+                onClick={() => {
+                  if (displayedCount >= images.length && hasMore) {
+                    onLoadMore();
+                  } else {
+                    setDisplayedCount((prev) => Math.min(prev + 15, images.length));
+                  }
+                }}
+                disabled={isLoadingMore}
+                className="bg-primary text-secondary hover:bg-accent border-secondary cursor-pointer rounded border px-6 py-2 font-semibold tracking-wide uppercase disabled:opacity-50"
+              >
+                {isLoadingMore ? 'Laden...' : 'Mehr laden'}
+              </button>
+            </div>
+          )}
 
           <AnimatePresence custom={direction}>
             {currentIndex !== null && (
@@ -95,7 +139,7 @@ const GalleryDisplay: React.FC<{ images: string[]; title: string }> = ({ images,
                 >
                   <motion.div
                     onClick={(e) => e.stopPropagation()} // prevent closing when clicking the image itself
-                    key={images[currentIndex]}
+                    key={images[currentIndex].uuid}
                     custom={direction}
                     variants={{
                       enter: (dir: number) => ({
@@ -114,11 +158,12 @@ const GalleryDisplay: React.FC<{ images: string[]; title: string }> = ({ images,
                     transition={{ type: 'tween', duration: 0.3 }}
                     className="relative flex h-full max-h-[90%] w-full max-w-[90%] items-center justify-center"
                   >
-                    <div className="relative h-full w-full">
+                    <div className="relative">
                       <Image
-                        src={`/api/gallery?uuid=${images[currentIndex]}`}
+                        src={`/api/gallery?uuid=${images[currentIndex].uuid}`}
                         alt="Photo"
-                        fill
+                        width={800}
+                        height={Math.round(800 / (images[currentIndex].aspectRatio || 16 / 9))}
                         className="object-contain"
                       />
                     </div>

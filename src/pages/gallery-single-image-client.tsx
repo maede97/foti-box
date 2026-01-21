@@ -29,7 +29,7 @@ const GallerySingleImageClient: React.FC<{ uuid: string; allowDownload: boolean 
           <div className="mt-4 flex justify-center">
             <button
               onClick={handleDownloadButton}
-              className="bg-secondary text-primary inline-flex cursor-pointer gap-2 rounded px-4 py-2 text-white"
+              className="bg-primary text-secondary hover:bg-accent border-secondary inline-flex cursor-pointer gap-2 rounded border px-4 py-2 font-semibold tracking-wide uppercase"
             >
               <Download /> Bild Herunterladen
             </button>

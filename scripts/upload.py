@@ -19,6 +19,7 @@ def upload_image(path_to_file: str, api_key: str):
             print("UUID:", data.get("uuid"))
         except requests.exceptions.RequestException as e:
             print("Error:", e)
+            print("Response:", response.text)
 
 
 if __name__ == "__main__":
