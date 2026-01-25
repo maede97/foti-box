@@ -7,7 +7,7 @@ import LogoPage from './logo-page';
 const ErrorPage: React.FC<{ message: string }> = ({ message }) => {
   return (
     <LogoPage>
-      <span className="text-error text-center text-lg">Fehler {message}</span>
+      <span className="text-error text-center text-lg">Fehler: {message}</span>
 
       <span className="text-sm tracking-wide uppercase">
         Brauchen Sie hilfe?{' '}
