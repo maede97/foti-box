@@ -15,7 +15,19 @@ export async function GET(req: NextRequest) {
   if (!authCheck) return NextResponse.json({ error: 'Nicht autorisiert' }, { status: 401 });
 
   const events = await Event.find({}).sort({ createdAt: -1 });
-  return NextResponse.json(events);
+
+  // Count images for each event
+  const eventsWithCounts = await Promise.all(
+    events.map(async (event) => {
+      const imageCount = await Image.countDocuments({ event: event._id });
+      return {
+        ...event.toObject(),
+        imageCount,
+      };
+    }),
+  );
+
+  return NextResponse.json(eventsWithCounts);
 }
 
 export async function DELETE(req: NextRequest) {

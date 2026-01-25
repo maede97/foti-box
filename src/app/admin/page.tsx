@@ -22,7 +22,7 @@ function Modal({ title, onClose, children }) {
         <div className="mt-6 text-right">
           <button
             onClick={onClose}
-            className="bg-error hover:bg-error-dark text-secondary cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
+            className="bg-error hover:bg-error-dark text-secondary cursor-pointer rounded border px-6 py-2 font-semibold tracking-wide uppercase transition focus:outline-none"
           >
             Schliessen
           </button>
@@ -420,6 +420,7 @@ export default function AdminPage() {
     }
 
     setImages(images.filter((img) => img.uuid !== uuid));
+    await fetchEvents();
   }
 
   useEffect(() => {
@@ -474,7 +475,7 @@ export default function AdminPage() {
             />
             <button
               onClick={handleLogin}
-              className="bg-primary text-secondary mt-4 w-full cursor-pointer p-3 text-sm font-semibold tracking-wide uppercase focus:outline-none"
+              className="bg-primary text-secondary hover:bg-accent-dark border-secondary mt-4 w-full cursor-pointer border p-3 text-sm font-semibold tracking-wide uppercase transition focus:outline-none"
             >
               Login
             </button>
@@ -492,258 +493,288 @@ export default function AdminPage() {
         </h1>
         <button
           onClick={handleLogout}
-          className="bg-error hover:bg-error-dark cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
+          className="bg-error hover:bg-error-dark text-secondary cursor-pointer rounded border px-6 py-2 font-semibold tracking-wide uppercase transition focus:outline-none"
         >
           Abmelden
         </button>
       </div>
 
-      {/* Events Table */}
+      {/* Events Section */}
       <section className="mb-10">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-6 flex items-center justify-between">
           <h2 className="text-2xl font-semibold">Events</h2>
           <button
             onClick={() => {
               setError('');
               setShowAddEvent(true);
             }}
-            className="bg-secondary text-primary hover:bg-accent-dark inline-flex cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
+            className="bg-primary text-secondary hover:bg-accent-dark inline-flex cursor-pointer rounded border px-6 py-2 font-semibold tracking-wide uppercase transition focus:outline-none"
           >
-            <Plus /> Event hinzufügen
+            <Plus className="mr-2" /> Event hinzufügen
           </button>
         </div>
 
-        <table className="bg-secondary w-full overflow-hidden text-left shadow-lg md:table-fixed">
-          <thead className="hidden md:table-header-group">
-            <tr className="bg-primary/80 text-secondary">
-              <th className="p-3">Name</th>
-              <th className="p-3">Slug</th>
-              <th className="p-3">Passwort</th>
-              <th className="p-3">Gäste Upload / Download</th>
-              <th className="p-3">Logo</th>
-              <th className="p-3">Event aktiv</th>
-              <th className="p-3">Aktionen</th>
-            </tr>
-          </thead>
-
-          <tbody>
+        {events.length === 0 ? (
+          <div className="bg-secondary text-primary/60 border-primary/20 rounded border p-8 text-center">
+            Keine Events vorhanden. Erstelle einen neuen Event, um zu beginnen.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {events.map((evt) => (
-              <tr
+              <motion.div
                 key={evt._id as unknown as string}
-                className="border-accent text-primary bg-secondary mb-4 block rounded-xl border-b p-4 md:mb-0 md:table-row md:rounded-none md:bg-transparent md:p-0"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-secondary border-primary/20 rounded border p-6 shadow-lg transition hover:shadow-xl"
               >
-                <td className="block p-3 md:table-cell">
-                  <span className="text-primary/60 mb-1 block text-sm md:hidden">Name</span>
-                  <Link
-                    href={`/event/${evt.slug}`}
-                    target="_blank"
-                    className="inline-flex items-center gap-1 font-semibold hover:underline"
-                  >
-                    {evt.name} <ExternalLink className="size-4" />
-                  </Link>
-                </td>
-
-                <td className="text-primary/70 block p-3 md:table-cell">
-                  <span className="text-primary/60 mb-1 block text-sm md:hidden">Slug</span>
-                  {evt.slug}
-                </td>
-
-                <td className="text-primary/70 block p-3 md:table-cell">
-                  <span className="text-primary/60 mb-1 block text-sm md:hidden">Passwort</span>
-                  {navigator && typeof navigator.share === 'function' && evt.password ? (
-                    <span
-                      className="inline-flex cursor-pointer items-center gap-1 font-semibold hover:underline"
-                      onClick={() => {
-                        navigator.share({
-                          title: 'foti-box.com',
-                          url: `${environmentVariables.NEXT_PUBLIC_APP_HOST_URL}/event/${evt.slug}`,
-                          text: `Sieh dir die Galerie ${evt.name} an und benutze dazu das Passwort ${evt.password}`,
-                        });
-                      }}
-                    >
-                      {evt.password} <ExternalLink className="size-4" />
-                    </span>
-                  ) : (
-                    evt.password
-                  )}
-                </td>
-
-                <td className="block p-3 md:table-cell">
-                  <span className="text-primary/60 mb-1 block text-sm md:hidden">
-                    Gäste Upload / Download
-                  </span>
-                  <button
-                    onClick={() => handleSetAllowUserUpload(evt._id, !evt.allow_user_uploads)}
-                    className={`cursor-pointer rounded-xl px-3 py-1 font-semibold transition ${
-                      evt.allow_user_uploads
-                        ? 'bg-success hover:bg-success-dark'
-                        : 'bg-error hover:bg-error-dark'
-                    }`}
-                  >
-                    Upload
-                  </button>
-
-                  <button
-                    onClick={() => handleSetAllowImageDownload(evt._id, !evt.allow_download)}
-                    className={`cursor-pointer rounded-xl px-3 py-1 font-semibold transition ${
-                      evt.allow_download
-                        ? 'bg-success hover:bg-success-dark'
-                        : 'bg-error hover:bg-error-dark'
-                    }`}
-                  >
-                    Download
-                  </button>
-                </td>
-
-                <td className="block p-3 md:table-cell">
-                  <span className="text-primary/60 mb-1 block text-sm md:hidden">Logo</span>
-                  {evt.logo ? (
-                    <div className="relative w-fit overflow-hidden rounded-xl shadow-lg">
-                      <Image
-                        alt={evt.logo}
-                        width={100}
-                        height={66}
-                        src={`/api/admin/logo?logo=${evt.logo}&eventId=${evt._id}`}
-                      />
-                      <button
-                        onClick={() => handleDeleteLogo(evt._id)}
-                        className="bg-error hover:bg-error-dark text-primary absolute top-2 right-2 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full"
-                      >
-                        <X />
-                      </button>
+                <div className="mb-4 flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="mb-2 flex items-center gap-3">
+                      <h3 className="text-primary text-lg font-bold">
+                        <Link
+                          href={`/event/${evt.slug}`}
+                          target="_blank"
+                          className="hover:text-accent-dark inline-flex items-center gap-2 transition"
+                        >
+                          {evt.name}
+                          <ExternalLink className="size-4" />
+                        </Link>
+                      </h3>
+                      {evt.active && (
+                        <span className="bg-success text-secondary rounded-full px-3 py-1 text-xs font-semibold tracking-wide uppercase">
+                          Aktiv
+                        </span>
+                      )}
                     </div>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        setError('');
-                        setShowAddLogo(evt._id as unknown as string);
-                      }}
-                      className="bg-primary text-secondary cursor-pointer rounded-xl px-4 py-2 font-semibold"
-                    >
-                      <Plus /> Logo setzen
-                    </button>
-                  )}
-                </td>
+                    <div className="mb-2 flex items-center gap-2">
+                      <span className="bg-primary/20 text-primary rounded px-2 py-1 text-xs font-semibold">
+                        {evt.imageCount || 0} {evt.imageCount === 1 ? 'Bild' : 'Bilder'}
+                      </span>
+                    </div>
+                    <p className="text-primary/60 text-sm">
+                      Slug: <span className="text-primary/80 font-mono">{evt.slug}</span>
+                    </p>
+                    <p className="text-primary/60 mt-1 text-sm">
+                      Passwort:{' '}
+                      {evt.password ? (
+                        navigator && typeof navigator.share === 'function' ? (
+                          <span
+                            className="text-primary/80 cursor-pointer font-mono hover:underline"
+                            onClick={() => {
+                              navigator.share({
+                                title: 'foti-box.com',
+                                url: `${environmentVariables.NEXT_PUBLIC_APP_HOST_URL}/event/${evt.slug}`,
+                                text: `Sieh dir die Galerie ${evt.name} an und benutze dazu das Passwort ${evt.password}`,
+                              });
+                            }}
+                          >
+                            {evt.password} <ExternalLink className="ml-1 inline size-3" />
+                          </span>
+                        ) : (
+                          <span className="text-primary/80 font-mono">{evt.password}</span>
+                        )
+                      ) : (
+                        <span className="text-primary/40 italic">Kein Passwort</span>
+                      )}
+                    </p>
+                  </div>
 
-                <td className="block p-3 md:table-cell">
-                  <span className="text-primary/60 mb-1 block text-sm md:hidden">Event aktiv</span>
-                  {evt.active ? (
-                    <span className="text-success font-semibold">Aktiv</span>
-                  ) : (
-                    <button
-                      onClick={() => switchActiveEvent(evt._id)}
-                      className="bg-primary text-secondary cursor-pointer rounded-xl px-3 py-1 font-semibold"
-                    >
-                      Setze Aktiv
-                    </button>
-                  )}
-                </td>
+                  {/* Logo Display */}
+                  <div className="ml-4">
+                    {evt.logo ? (
+                      <div className="relative h-16 w-24 overflow-hidden rounded-lg shadow-md">
+                        <Image
+                          alt={evt.logo}
+                          width={96}
+                          height={64}
+                          src={`/api/admin/logo?logo=${evt.logo}&eventId=${evt._id}`}
+                          className="object-contain"
+                        />
+                        <button
+                          onClick={() => handleDeleteLogo(evt._id)}
+                          className="bg-error hover:bg-error-dark text-secondary absolute top-1 right-1 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full transition focus:outline-none"
+                        >
+                          <X className="size-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          setError('');
+                          setShowAddLogo(evt._id as unknown as string);
+                        }}
+                        className="bg-primary text-secondary hover:bg-accent-dark cursor-pointer rounded border px-4 py-2 text-xs font-semibold tracking-wide whitespace-nowrap uppercase transition focus:outline-none"
+                      >
+                        <Plus className="mr-1 inline size-3" /> Logo
+                      </button>
+                    )}
+                  </div>
+                </div>
 
-                <td className="block p-3 md:table-cell md:text-right">
-                  <span className="text-primary/60 mb-1 block text-sm md:hidden">Aktionen</span>
-                  <div className="flex flex-wrap gap-2 md:justify-end">
+                {/* Features Row */}
+                <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-4">
+                  <div className="bg-primary/5 rounded p-3">
+                    <p className="text-primary/60 mb-1 text-xs tracking-wide uppercase">Upload</p>
                     <button
-                      className="bg-primary text-secondary cursor-pointer rounded-xl px-3 py-1 font-semibold"
-                      onClick={() => {
-                        setImagesForEvent(evt);
-                        void fetchImages(evt);
-                      }}
+                      onClick={() => handleSetAllowUserUpload(evt._id, !evt.allow_user_uploads)}
+                      className={`w-full cursor-pointer rounded border px-3 py-2 text-xs font-semibold tracking-wide uppercase transition focus:outline-none ${
+                        evt.allow_user_uploads
+                          ? 'bg-success hover:bg-success-dark text-secondary'
+                          : 'bg-error hover:bg-error-dark text-secondary'
+                      }`}
                     >
-                      Lade Bilder
-                    </button>
-                    <button
-                      onClick={() => handleDeleteEvent(evt._id)}
-                      className="bg-error hover:bg-error-dark cursor-pointer rounded-xl px-3 py-1 font-semibold"
-                    >
-                      Löschen
+                      {evt.allow_user_uploads ? 'Ein' : 'Aus'}
                     </button>
                   </div>
-                </td>
-              </tr>
+
+                  <div className="bg-primary/5 rounded p-3">
+                    <p className="text-primary/60 mb-1 text-xs tracking-wide uppercase">Download</p>
+                    <button
+                      onClick={() => handleSetAllowImageDownload(evt._id, !evt.allow_download)}
+                      className={`w-full cursor-pointer rounded border px-3 py-2 text-xs font-semibold tracking-wide uppercase transition focus:outline-none ${
+                        evt.allow_download
+                          ? 'bg-success hover:bg-success-dark text-secondary'
+                          : 'bg-error hover:bg-error-dark text-secondary'
+                      }`}
+                    >
+                      {evt.allow_download ? 'Ein' : 'Aus'}
+                    </button>
+                  </div>
+
+                  {!evt.active && (
+                    <div className="bg-primary/5 rounded p-3 md:col-span-2">
+                      <p className="text-primary/60 mb-1 text-xs tracking-wide uppercase">Status</p>
+                      <button
+                        onClick={() => switchActiveEvent(evt._id)}
+                        className="bg-primary text-secondary hover:bg-accent-dark w-full cursor-pointer rounded border px-3 py-2 text-xs font-semibold tracking-wide uppercase transition focus:outline-none"
+                      >
+                        Als aktiv setzen
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Actions */}
+                <div className="border-primary/10 flex flex-wrap gap-2 border-t pt-4">
+                  <button
+                    className="bg-primary text-secondary hover:bg-accent-dark flex-1 cursor-pointer rounded border px-4 py-2 text-xs font-semibold tracking-wide uppercase transition focus:outline-none"
+                    onClick={() => {
+                      setImagesForEvent(evt);
+                      void fetchImages(evt);
+                    }}
+                  >
+                    Bilder laden
+                  </button>
+                  <button
+                    onClick={() => handleDeleteEvent(evt._id)}
+                    className="bg-error hover:bg-error-dark text-secondary cursor-pointer rounded border px-4 py-2 text-xs font-semibold tracking-wide uppercase transition focus:outline-none"
+                  >
+                    Löschen
+                  </button>
+                </div>
+              </motion.div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        )}
       </section>
 
+      {/* Boxes Section */}
       <section className="mb-10">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-6 flex items-center justify-between">
           <h2 className="text-2xl font-semibold">Boxen</h2>
           <button
             onClick={() => {
               setError('');
               setShowAddBox(true);
             }}
-            className="bg-secondary text-primary hover:bg-accent-dark inline-flex cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
+            className="bg-primary text-secondary hover:bg-accent-dark inline-flex cursor-pointer rounded border px-6 py-2 font-semibold tracking-wide uppercase transition focus:outline-none"
           >
-            <Plus /> Box hinzufügen
+            <Plus className="mr-2" /> Box hinzufügen
           </button>
         </div>
 
-        <table className="bg-secondary w-full text-left shadow-lg md:table">
-          <thead className="hidden md:table-header-group">
-            <tr className="bg-primary/80 text-secondary">
-              <th className="p-3">Label</th>
-              <th className="p-3">Letzter Upload</th>
-              <th className="p-3">Zugangstoken</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Aktionen</th>
-            </tr>
-          </thead>
-          <tbody className="block md:table-row-group">
+        {boxes.length === 0 ? (
+          <div className="bg-secondary text-primary/60 border-primary/20 rounded border p-8 text-center">
+            Keine Boxen vorhanden. Erstelle eine neue Box, um zu beginnen.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {boxes.map((box) => (
-              <tr
+              <motion.div
                 key={box._id as unknown as string}
-                className="border-accent mb-4 block rounded-xl border-b p-4 md:mb-0 md:table-row md:rounded-none md:p-0"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-secondary border-primary/20 rounded border p-6 shadow-lg transition hover:shadow-xl"
               >
-                <td className="text-primary/70 block p-3 font-semibold md:table-cell">
-                  <span className="text-primary/60 mb-1 block text-xs md:hidden">Label</span>
-                  {box.label}
-                </td>
+                <div className="mb-4 flex items-start justify-between gap-4">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-primary mb-3 text-lg font-bold">{box.label}</h3>
 
-                <td className="text-primary/70 block p-3 md:table-cell">
-                  <span className="text-primary/60 mb-1 block text-xs md:hidden">
-                    Letzter Upload
-                  </span>
-                  {box.lastUpload ? new Date(box.lastUpload).toLocaleString('de-CH') : 'Nie'}
-                </td>
+                    <div className="space-y-2">
+                      <div className="bg-primary/5 rounded p-3">
+                        <p className="text-primary/60 mb-1 text-xs tracking-wide uppercase">
+                          Zugangstoken
+                        </p>
+                        <p className="text-primary/80 font-mono text-sm break-all">
+                          {box.accessToken}
+                        </p>
+                      </div>
 
-                <td className="text-primary/70 block p-3 break-all md:table-cell">
-                  <span className="text-primary/60 mb-1 block text-xs md:hidden">Zugangstoken</span>
-                  {box.accessToken}
-                </td>
+                      <div className="bg-primary/5 rounded p-3">
+                        <p className="text-primary/60 mb-1 text-xs tracking-wide uppercase">
+                          Letzter Upload
+                        </p>
+                        <p className="text-primary/80 text-sm">
+                          {box.lastUpload
+                            ? new Date(box.lastUpload).toLocaleString('de-CH')
+                            : 'Noch kein Upload'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
 
-                <td className="block p-3 md:table-cell">
-                  <span className="text-primary/60 mb-1 block text-xs md:hidden">Status</span>
+                  {/* Status Indicator */}
+                  <div className="flex-shrink-0">
+                    {box.active ? (
+                      <span className="bg-success text-secondary inline-block rounded-full px-3 py-1 text-xs font-semibold tracking-wide uppercase">
+                        Aktiv
+                      </span>
+                    ) : (
+                      <span className="bg-error text-secondary inline-block rounded-full px-3 py-1 text-xs font-semibold tracking-wide uppercase">
+                        Inaktiv
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="border-primary/10 flex flex-wrap gap-2 border-t pt-4">
                   {box.active ? (
                     <button
                       onClick={() => handleBoxActive(box._id, false)}
-                      className="bg-primary text-secondary hover:bg-accent-dark cursor-pointer rounded-xl px-3 py-1 font-semibold transition"
+                      className="bg-primary text-secondary hover:bg-accent-dark flex-1 cursor-pointer rounded border px-4 py-2 text-xs font-semibold tracking-wide uppercase transition focus:outline-none"
                     >
                       Deaktivieren
                     </button>
                   ) : (
                     <button
                       onClick={() => handleBoxActive(box._id, true)}
-                      className="bg-primary text-secondary hover:bg-accent-dark cursor-pointer rounded-xl px-3 py-1 font-semibold transition"
+                      className="bg-primary text-secondary hover:bg-accent-dark flex-1 cursor-pointer rounded border px-4 py-2 text-xs font-semibold tracking-wide uppercase transition focus:outline-none"
                     >
                       Aktivieren
                     </button>
                   )}
-                </td>
-
-                <td className="block p-3 md:table-cell md:text-right">
-                  <span className="text-primary/60 mb-1 block text-xs md:hidden">Aktionen</span>
                   <button
                     onClick={() => handleDeleteBox(box._id)}
-                    className="bg-error hover:bg-error-dark cursor-pointer rounded-xl px-3 py-1 font-semibold transition"
+                    className="bg-error hover:bg-error-dark text-secondary cursor-pointer rounded border px-4 py-2 text-xs font-semibold tracking-wide uppercase transition focus:outline-none"
                   >
                     Löschen
                   </button>
-                </td>
-              </tr>
+                </div>
+              </motion.div>
             ))}
-          </tbody>
-        </table>
+          </div>
+        )}
       </section>
 
       {/* Images Grid */}
@@ -776,7 +807,7 @@ export default function AdminPage() {
                     </Link>
                     <button
                       onClick={() => handleDeleteImage(img.uuid)}
-                      className="text-primary bg-error hover:bg-error-dark absolute top-4 right-4 z-50 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full transition"
+                      className="bg-error hover:bg-error-dark text-secondary absolute top-4 right-4 z-50 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition focus:outline-none"
                     >
                       <X />
                     </button>
@@ -788,7 +819,7 @@ export default function AdminPage() {
                   <button
                     onClick={loadMore}
                     disabled={isLoadingMore}
-                    className="bg-primary text-secondary hover:bg-accent-dark border-secondary cursor-pointer rounded border px-6 py-2 font-semibold tracking-wide uppercase disabled:opacity-50"
+                    className="bg-primary text-secondary hover:bg-accent-dark border-secondary cursor-pointer rounded border px-6 py-2 font-semibold tracking-wide uppercase transition focus:outline-none disabled:opacity-50"
                   >
                     {isLoadingMore ? 'Laden...' : 'Mehr laden'}
                   </button>
@@ -829,7 +860,7 @@ export default function AdminPage() {
             {error && <p className="text-error">{error}</p>}
             <button
               onClick={handleAddEvent}
-              className="bg-primary text-secondary hover:bg-accent-dark cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
+              className="bg-primary text-secondary hover:bg-accent-dark cursor-pointer rounded border px-6 py-2 font-semibold tracking-wide uppercase transition focus:outline-none"
             >
               Event hinzufügen
             </button>
@@ -860,7 +891,7 @@ export default function AdminPage() {
             {error && <p className="text-error">{error}</p>}
             <button
               onClick={handleAddBox}
-              className="bg-primary text-secondary hover:bg-accent-dark cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
+              className="bg-primary text-secondary hover:bg-accent-dark cursor-pointer rounded border px-6 py-2 font-semibold tracking-wide uppercase transition focus:outline-none"
             >
               Box hinzufügen
             </button>
@@ -896,7 +927,7 @@ export default function AdminPage() {
             {selectedLogo && (
               <button
                 onClick={handleAddLogo}
-                className="bg-primary text-secondary hover:bg-accent-dark cursor-pointer rounded-xl px-4 py-2 font-semibold shadow-lg transition"
+                className="bg-primary text-secondary hover:bg-accent-dark cursor-pointer rounded border px-6 py-2 font-semibold tracking-wide uppercase transition focus:outline-none"
               >
                 Logo setzen
               </button>
