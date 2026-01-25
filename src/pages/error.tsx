@@ -10,9 +10,9 @@ const ErrorPage: React.FC<{ message: string }> = ({ message }) => {
       <span className="text-error text-center text-lg">Fehler: {message}</span>
 
       <span className="text-sm tracking-wide uppercase">
-        Brauchen Sie hilfe?{' '}
+        Brauchen Sie Hilfe?{' '}
         <Link
-          href="mailto:mieten@foti-box.com"
+          href="mailto:hilfe@foti-box.com"
           target="_blank"
           className="text-secondary hover:text-accent inline-flex items-center gap-1 underline"
         >
