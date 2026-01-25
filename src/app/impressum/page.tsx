@@ -33,7 +33,7 @@ const ImpressumPage: React.FC = () => {
       </Link>
       <span className="p-2"></span>
       <span className="text-sm tracking-wide">
-        Version {build.version} vom {build.timestamp}
+        Version {build.version} vom {build.timestamp} (UTC)
       </span>
       <span className="text-sm tracking-wide">
         Git Branch {build.git.branch}, Hash {build.git.hash}
