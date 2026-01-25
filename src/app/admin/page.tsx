@@ -523,10 +523,8 @@ export default function AdminPage() {
         ) : (
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {events.map((evt) => (
-              <motion.div
+              <div
                 key={evt._id as unknown as string}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
                 className="bg-secondary border-primary/20 rounded border p-6 shadow-lg transition hover:shadow-xl"
               >
                 <div className="mb-4 flex items-start justify-between">
@@ -675,7 +673,7 @@ export default function AdminPage() {
                     Löschen
                   </button>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         )}
@@ -703,10 +701,8 @@ export default function AdminPage() {
         ) : (
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {boxes.map((box) => (
-              <motion.div
+              <div
                 key={box._id as unknown as string}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
                 className="bg-secondary border-primary/20 rounded border p-6 shadow-lg transition hover:shadow-xl"
               >
                 <div className="mb-4 flex items-start justify-between gap-4">
@@ -774,7 +770,7 @@ export default function AdminPage() {
                     Löschen
                   </button>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         )}
