@@ -521,7 +521,7 @@ export default function AdminPage() {
             Keine Events vorhanden. Erstelle einen neuen Event, um zu beginnen.
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {events.map((evt) => (
               <motion.div
                 key={evt._id as unknown as string}
@@ -582,15 +582,16 @@ export default function AdminPage() {
                   </div>
 
                   {/* Logo Display */}
-                  <div className="ml-4">
+                  <div className="ml-4 flex-shrink-0">
                     {evt.logo ? (
-                      <div className="relative h-16 w-24 overflow-hidden rounded-lg shadow-md">
+                      <div className="bg-primary/5 relative h-16 w-24 overflow-hidden rounded-lg shadow-md">
                         <Image
                           alt={evt.logo}
                           width={96}
                           height={64}
                           src={`/api/admin/logo?logo=${evt.logo}&eventId=${evt._id}`}
-                          className="object-contain"
+                          className="h-full w-full object-contain"
+                          priority={false}
                         />
                         <button
                           onClick={() => handleDeleteLogo(evt._id)}
@@ -700,7 +701,7 @@ export default function AdminPage() {
             Keine Boxen vorhanden. Erstelle eine neue Box, um zu beginnen.
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             {boxes.map((box) => (
               <motion.div
                 key={box._id as unknown as string}
