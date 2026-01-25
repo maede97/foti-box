@@ -32,6 +32,8 @@ function Modal({ title, onClose, children }) {
   );
 }
 
+type EventWithCount = IEvent & { imageCount: number };
+
 export default function AdminPage() {
   const [images, setImages] = useState<IImage[]>([]);
   const [imagesForEvent, setImagesForEvent] = useState<IEvent | undefined>();
@@ -53,7 +55,7 @@ export default function AdminPage() {
   const [adminPassword, setAdminPassword] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const [token, setToken] = useState<string | undefined>(undefined);
-  const [events, setEvents] = useState<IEvent[]>([]);
+  const [events, setEvents] = useState<EventWithCount[]>([]);
   const [boxes, setBoxes] = useState<IBox[]>([]);
 
   const [showAddEvent, setShowAddEvent] = useState(false);
