@@ -34,11 +34,13 @@ const EventPageClient: React.FC<{
   }, [isLoadingMore, hasMore, images.length, eventSlug, currentPassword, setImages, setError]);
 
   useEffect(() => {
-    if (loggedIn && images.length > 0) {
+    if (loggedIn) {
       if (images.length < 15) {
         setHasMore(false);
       }
-      setDisplayedCount((prev) => Math.min(prev, images.length));
+      if (images.length > 0) {
+        setDisplayedCount((prev) => Math.min(prev, images.length));
+      }
     }
   }, [images, loggedIn]);
 
