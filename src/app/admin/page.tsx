@@ -16,8 +16,8 @@ type ObjectId = Types.ObjectId;
 function Modal({ title, onClose, children }) {
   return (
     <div className="bg-primary/80 fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="bg-secondary text-primary relative w-full max-w-lg rounded-2xl p-6 shadow-xl">
-        <h2 className="mb-4 text-xl font-bold">{title}</h2>
+      <div className="bg-secondary text-primary relative w-full max-w-xl rounded-2xl p-6 shadow-xl">
+        <h2 className="text-primary mb-6 text-lg font-semibold tracking-wide uppercase">{title}</h2>
         {children}
         <div className="mt-6 text-right">
           <button
@@ -831,35 +831,44 @@ export default function AdminPage() {
 
       {showAddEvent && (
         <Modal title="Event hinzufügen" onClose={() => setShowAddEvent(false)}>
-          <div className="flex flex-col gap-4">
-            <input
-              type="text"
-              placeholder="Event Name"
-              value={eventName}
-              onChange={(e) => setEventName(e.target.value)}
-              className="text-secondary bg-primary rounded-xl p-3 focus:outline-none"
-            />
-            <input
-              type="text"
-              placeholder="Event Slug"
-              value={eventSlug}
-              onChange={(e) => setEventSlug(e.target.value)}
-              className="text-secondary bg-primary rounded-xl p-3 focus:outline-none"
-            />
-            <input
-              type="text"
-              placeholder="Passwort"
-              value={eventPassword}
-              onChange={(e) => setEventPassword(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleAddEvent();
-              }}
-              className="text-secondary bg-primary rounded-xl p-3 focus:outline-none"
-            />
-            {error && <p className="text-error">{error}</p>}
+          <div className="space-y-3">
+            <div className="flex flex-col gap-1">
+              <label className="text-primary text-xs tracking-wide uppercase">Event Name</label>
+              <input
+                type="text"
+                placeholder="Event Name"
+                value={eventName}
+                onChange={(e) => setEventName(e.target.value)}
+                className="bg-primary text-secondary w-full border p-2 text-sm focus:outline-none"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-primary text-xs tracking-wide uppercase">Event Slug</label>
+              <input
+                type="text"
+                placeholder="Event Slug"
+                value={eventSlug}
+                onChange={(e) => setEventSlug(e.target.value)}
+                className="bg-primary text-secondary w-full border p-2 text-sm focus:outline-none"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-primary text-xs tracking-wide uppercase">Passwort</label>
+              <input
+                type="text"
+                placeholder="Passwort"
+                value={eventPassword}
+                onChange={(e) => setEventPassword(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleAddEvent();
+                }}
+                className="bg-primary text-secondary w-full border p-2 text-sm focus:outline-none"
+              />
+            </div>
+            {error && <p className="text-error p-2 text-center text-sm">{error}</p>}
             <button
               onClick={handleAddEvent}
-              className="bg-primary text-secondary hover:bg-accent-dark cursor-pointer rounded border px-6 py-2 font-semibold tracking-wide uppercase transition focus:outline-none"
+              className="bg-primary text-secondary mt-4 w-full cursor-pointer p-3 text-sm font-semibold tracking-wide uppercase focus:outline-none"
             >
               Event hinzufügen
             </button>
@@ -869,28 +878,34 @@ export default function AdminPage() {
 
       {showAddBox && (
         <Modal title="Box hinzufügen" onClose={() => setShowAddBox(false)}>
-          <div className="flex flex-col gap-4">
-            <input
-              type="text"
-              placeholder="Box Label"
-              value={boxLabel}
-              onChange={(e) => setBoxLabel(e.target.value)}
-              className="text-secondary bg-primary rounded-xl p-3 focus:outline-none"
-            />
-            <input
-              type="text"
-              placeholder="Zugangstoken"
-              value={boxAccessToken}
-              onChange={(e) => setBoxAccessToken(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleAddBox();
-              }}
-              className="text-secondary bg-primary rounded-xl p-3 focus:outline-none"
-            />
-            {error && <p className="text-error">{error}</p>}
+          <div className="space-y-3">
+            <div className="flex flex-col gap-1">
+              <label className="text-primary text-xs tracking-wide uppercase">Box Label</label>
+              <input
+                type="text"
+                placeholder="Box Label"
+                value={boxLabel}
+                onChange={(e) => setBoxLabel(e.target.value)}
+                className="bg-primary text-secondary w-full border p-2 text-sm focus:outline-none"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-primary text-xs tracking-wide uppercase">Zugangstoken</label>
+              <input
+                type="text"
+                placeholder="Zugangstoken"
+                value={boxAccessToken}
+                onChange={(e) => setBoxAccessToken(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleAddBox();
+                }}
+                className="bg-primary text-secondary w-full border p-2 text-sm focus:outline-none"
+              />
+            </div>
+            {error && <p className="text-error p-2 text-center text-sm">{error}</p>}
             <button
               onClick={handleAddBox}
-              className="bg-primary text-secondary hover:bg-accent-dark cursor-pointer rounded border px-6 py-2 font-semibold tracking-wide uppercase transition focus:outline-none"
+              className="bg-primary text-secondary mt-4 w-full cursor-pointer p-3 text-sm font-semibold tracking-wide uppercase focus:outline-none"
             >
               Box hinzufügen
             </button>
