@@ -46,8 +46,8 @@ const GalleryDisplay: React.FC<{
   }, [closeGallery, prevImage, nextImage]);
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <main className="m-6 flex-1">
+    <div className="flex min-h-screen flex-col p-6">
+      <main className="flex-1">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8">
           <h1 className="text-secondary mb-6 text-center text-2xl font-semibold tracking-wide uppercase">
             {title || 'Galerie'}

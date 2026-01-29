@@ -60,7 +60,7 @@ const EventPageClient: React.FC<{
   }, [eventSlug]);
 
   return (
-    <div className="m-6">
+    <div>
       {!loggedIn && (
         <GalleryLogin
           fetchGallery={(selectedEvents, passwords) => {
