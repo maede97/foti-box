@@ -8,7 +8,7 @@ A small web-gui for my custom photobooth (consisting of a box with a Nikon camer
 
 Visit [foti-box.com](https://foti-box.com)!
 
-> [TIP]
+> [!TIP]
 > Visit the `Demo` event and see this project in action:
 > Go to [https://foti-box.com/event/demo](https://foti-box.com/event/demo)
 > and enter the password `demo`!
