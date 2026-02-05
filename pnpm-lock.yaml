@@ -27,8 +27,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0(socks@2.8.7)
       mongoose:
-        specifier: ^9.1.5
-        version: 9.1.5(socks@2.8.7)
+        specifier: ^9.1.6
+        version: 9.1.6(socks@2.8.7)
       next:
         specifier: ^16.1.6
         version: 16.1.6(@babel/core@7.28.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.94.2)
@@ -2077,8 +2077,8 @@ packages:
       socks:
         optional: true
 
-  mongoose@9.1.5:
-    resolution: {integrity: sha512-N6gypEO+wLmZp8kCYNQmrEWxVMT0KhyHvVttBZoKA/1ngY7aUsBjqHzCPtDgz+i8JAnqMOiEKmuJIDEQu1b9Dw==}
+  mongoose@9.1.6:
+    resolution: {integrity: sha512-ZrtgRsJKtW3od36TVXtAnrNHOO3rqhsqfVut6IzyWyJeLLeLTqW66qej/0qB37GZd5jL06nHfAceTikkfnSqbA==}
     engines: {node: '>=20.19.0'}
 
   motion-dom@12.30.0:
@@ -4680,7 +4680,7 @@ snapshots:
     optionalDependencies:
       socks: 2.8.7
 
-  mongoose@9.1.5(socks@2.8.7):
+  mongoose@9.1.6(socks@2.8.7):
     dependencies:
       kareem: 3.0.0
       mongodb: 7.0.0(socks@2.8.7)
