@@ -24,8 +24,8 @@ importers:
         specifier: ^0.563.0
         version: 0.563.0(react@19.2.4)
       mongodb:
-        specifier: ^7.0.0
-        version: 7.0.0(socks@2.8.7)
+        specifier: ^7.1.0
+        version: 7.1.0(socks@2.8.7)
       mongoose:
         specifier: ^9.1.6
         version: 9.1.6(socks@2.8.7)
@@ -1177,8 +1177,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
-  bson@7.1.1:
-    resolution: {integrity: sha512-TtJgBB+QyOlWjrbM+8bRgH84VM/xrDjyBFgSgGrfZF4xvt6gbEDtcswm27Tn9F9TWsjQybxT8b8VpCP/oJK4Dw==}
+  bson@7.2.0:
+    resolution: {integrity: sha512-YCEo7KjMlbNlyHhz7zAZNDpIpQbd+wOEHJYezv0nMYTn4x31eIUM2yomNNubclAt63dObUzKHWsBLJ9QcZNSnQ==}
     engines: {node: '>=20.19.0'}
 
   buffer-equal-constant-time@1.0.1:
@@ -2052,6 +2052,33 @@ packages:
 
   mongodb@7.0.0:
     resolution: {integrity: sha512-vG/A5cQrvGGvZm2mTnCSz1LUcbOPl83hfB6bxULKQ8oFZauyox/2xbZOoGNl+64m8VBrETkdGCDBdOsCr3F3jg==}
+    engines: {node: '>=20.19.0'}
+    peerDependencies:
+      '@aws-sdk/credential-providers': ^3.806.0
+      '@mongodb-js/zstd': ^7.0.0
+      gcp-metadata: ^7.0.1
+      kerberos: ^7.0.0
+      mongodb-client-encryption: '>=7.0.0 <7.1.0'
+      snappy: ^7.3.2
+      socks: ^2.8.6
+    peerDependenciesMeta:
+      '@aws-sdk/credential-providers':
+        optional: true
+      '@mongodb-js/zstd':
+        optional: true
+      gcp-metadata:
+        optional: true
+      kerberos:
+        optional: true
+      mongodb-client-encryption:
+        optional: true
+      snappy:
+        optional: true
+      socks:
+        optional: true
+
+  mongodb@7.1.0:
+    resolution: {integrity: sha512-kMfnKunbolQYwCIyrkxNJFB4Ypy91pYqua5NargS/f8ODNSJxT03ZU3n1JqL4mCzbSih8tvmMEMLpKTT7x5gCg==}
     engines: {node: '>=20.19.0'}
     peerDependencies:
       '@aws-sdk/credential-providers': ^3.806.0
@@ -3662,7 +3689,7 @@ snapshots:
       node-releases: 2.0.27
       update-browserslist-db: 1.2.3(browserslist@4.28.1)
 
-  bson@7.1.1: {}
+  bson@7.2.0: {}
 
   buffer-equal-constant-time@1.0.1: {}
 
@@ -4675,7 +4702,15 @@ snapshots:
   mongodb@7.0.0(socks@2.8.7):
     dependencies:
       '@mongodb-js/saslprep': 1.4.5
-      bson: 7.1.1
+      bson: 7.2.0
+      mongodb-connection-string-url: 7.0.1
+    optionalDependencies:
+      socks: 2.8.7
+
+  mongodb@7.1.0(socks@2.8.7):
+    dependencies:
+      '@mongodb-js/saslprep': 1.4.5
+      bson: 7.2.0
       mongodb-connection-string-url: 7.0.1
     optionalDependencies:
       socks: 2.8.7
