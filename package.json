@@ -25,13 +25,13 @@
     ]
   },
   "dependencies": {
-    "@t3-oss/env-nextjs": "^0.13.10",
+    "@t3-oss/env-nextjs": "^0.13.11",
     "bcrypt": "^6.0.0",
     "framer-motion": "^12.38.0",
     "jsonwebtoken": "^9.0.3",
-    "lucide-react": "^0.577.0",
-    "mongodb": "^7.1.0",
-    "mongoose": "^9.3.1",
+    "lucide-react": "^1.7.0",
+    "mongodb": "^7.1.1",
+    "mongoose": "^9.3.3",
     "next": "^16.2.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
@@ -47,7 +47,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "19.2.3",
     "babel-plugin-react-compiler": "^1.0.0",
-    "baseline-browser-mapping": "^2.10.10",
+    "baseline-browser-mapping": "^2.10.12",
     "dotenv": "^17.3.1",
     "eslint": "^10.1.0",
     "eslint-config-next": "^16.2.1",
@@ -60,7 +60,7 @@
     "tailwindcss": "^4.2.2",
     "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.2"
   },
   "packageManager": "pnpm@10.28.0+sha512.05df71d1421f21399e053fde567cea34d446fa02c76571441bfc1c7956e98e363088982d940465fd34480d4d90a0668bc12362f8aa88000a64e83d0b0e47be48",
   "engines": {
