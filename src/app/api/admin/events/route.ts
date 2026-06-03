@@ -82,4 +82,36 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ message: 'Event erstellt', event });
 }
 
+export async function PUT(req: NextRequest) {
+  await connectToDatabase();
+
+  const authCheck = requireAdmin(req);
+  if (!authCheck) return NextResponse.json({ error: 'Nicht autorisiert' }, { status: 401 });
+
+  const { eventID, name, slug, password } = await req.json();
+
+  if (!eventID || !name || !slug)
+    return NextResponse.json({ error: 'Fehlender Event, Name oder Slug' }, { status: 400 });
+
+  const slugAlreadyUsed = await Event.findOne({ slug, _id: { $ne: eventID } });
+  if (slugAlreadyUsed)
+    return NextResponse.json({ error: 'Slug wird bereits verwendet' }, { status: 400 });
+
+  const event = await Event.findByIdAndUpdate(
+    eventID,
+    {
+      $set: {
+        name,
+        slug,
+        password: password || '',
+      },
+    },
+    { new: true },
+  );
+
+  if (!event) return NextResponse.json({ error: 'Event nicht gefunden' }, { status: 404 });
+
+  return NextResponse.json({ message: 'Event aktualisiert', event });
+}
+
 export const dynamic = 'force-dynamic';
