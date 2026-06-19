@@ -66,14 +66,18 @@ export async function POST(req: NextRequest) {
   const authCheck = requireAdmin(req);
   if (!authCheck) return NextResponse.json({ error: 'Nicht autorisiert' }, { status: 401 });
 
-  const { name, slug, password } = await req.json();
-  if (!name || !slug)
-    return NextResponse.json({ error: 'Fehlender Name oder Slug' }, { status: 400 });
+  const { name, slug, password, admin_password } = await req.json();
+  if (!name || !slug || !admin_password)
+    return NextResponse.json(
+      { error: 'Fehlender Name, Admin Passwort oder Slug' },
+      { status: 400 },
+    );
 
   const event = new Event({
     name,
     slug,
     password: password,
+    admin_password: admin_password,
     allow_user_uploads: false,
     active: false,
   });
@@ -88,10 +92,13 @@ export async function PUT(req: NextRequest) {
   const authCheck = requireAdmin(req);
   if (!authCheck) return NextResponse.json({ error: 'Nicht autorisiert' }, { status: 401 });
 
-  const { eventID, name, slug, password } = await req.json();
+  const { eventID, name, slug, password, admin_password } = await req.json();
 
-  if (!eventID || !name || !slug)
-    return NextResponse.json({ error: 'Fehlender Event, Name oder Slug' }, { status: 400 });
+  if (!eventID || !name || !slug || !admin_password)
+    return NextResponse.json(
+      { error: 'Fehlender Event, Name, Admin Passwort oder Slug' },
+      { status: 400 },
+    );
 
   const slugAlreadyUsed = await Event.findOne({ slug, _id: { $ne: eventID } });
   if (slugAlreadyUsed)
@@ -104,6 +111,7 @@ export async function PUT(req: NextRequest) {
         name,
         slug,
         password: password || '',
+        admin_password: admin_password,
       },
     },
     { new: true },

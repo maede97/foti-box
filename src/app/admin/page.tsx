@@ -41,10 +41,12 @@ export default function AdminPage() {
   const [eventName, setEventName] = useState('');
   const [eventSlug, setEventSlug] = useState('');
   const [eventPassword, setEventPassword] = useState('');
+  const [eventAdminPassword, setEventAdminPassword] = useState('');
   const [editEventId, setEditEventId] = useState('');
   const [editEventName, setEditEventName] = useState('');
   const [editEventSlug, setEditEventSlug] = useState('');
   const [editEventPassword, setEditEventPassword] = useState('');
+  const [editEventAdminPassword, setEditEventAdminPassword] = useState('');
 
   const [boxLabel, setBoxLabel] = useState('');
   const [boxAccessToken, setBoxAccessToken] = useState('');
@@ -57,8 +59,11 @@ export default function AdminPage() {
 
   const [adminUsername, setAdminUsername] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [token, setToken] = useState<string | undefined>(undefined);
+  const [token, setToken] = useState<string | undefined>(() => {
+    if (typeof window === 'undefined') return undefined;
+    return localStorage.getItem('adminToken') ?? undefined;
+  });
+  const [loggedIn, setLoggedIn] = useState(() => Boolean(token));
   const [events, setEvents] = useState<EventWithCount[]>([]);
   const [boxes, setBoxes] = useState<IBox[]>([]);
 
@@ -108,7 +113,12 @@ export default function AdminPage() {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ name: eventName, slug: eventSlug, password: eventPassword }),
+      body: JSON.stringify({
+        name: eventName,
+        slug: eventSlug,
+        password: eventPassword,
+        admin_password: eventAdminPassword,
+      }),
     });
 
     if (!res.ok) {
@@ -120,6 +130,7 @@ export default function AdminPage() {
     setEventName('');
     setEventSlug('');
     setEventPassword('');
+    setEventAdminPassword('');
     fetchEvents();
     setShowAddEvent(false);
   }
@@ -151,6 +162,7 @@ export default function AdminPage() {
     setEditEventName(event.name);
     setEditEventSlug(event.slug);
     setEditEventPassword(event.password || '');
+    setEditEventAdminPassword(event.admin_password);
     setShowEditEvent(true);
   }
 
@@ -160,11 +172,12 @@ export default function AdminPage() {
     setEditEventName('');
     setEditEventSlug('');
     setEditEventPassword('');
+    setEditEventAdminPassword('');
   }
 
   async function handleEditEvent() {
-    if (!editEventId || !editEventName || !editEventSlug)
-      return setError('Name und Slug angeben.');
+    if (!editEventId || !editEventName || !editEventSlug || !editEventAdminPassword)
+      return setError('Name, Slug und Admin Passwort angeben.');
 
     const res = await fetch('/api/admin/events', {
       method: 'PUT',
@@ -177,6 +190,7 @@ export default function AdminPage() {
         name: editEventName,
         slug: editEventSlug,
         password: editEventPassword,
+        admin_password: editEventAdminPassword,
       }),
     });
 
@@ -192,6 +206,7 @@ export default function AdminPage() {
         name: editEventName,
         slug: editEventSlug,
         password: editEventPassword,
+        admin_password: editEventAdminPassword,
       } as IEvent);
     }
 
@@ -487,6 +502,7 @@ export default function AdminPage() {
   useEffect(() => {
     const savedToken = localStorage.getItem('adminToken');
     if (savedToken) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setToken(savedToken);
       setLoggedIn(true);
     }
@@ -494,10 +510,10 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (loggedIn && token) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchEvents();
       fetchBoxes();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loggedIn, token]);
 
   if (!loggedIn) {
@@ -635,6 +651,10 @@ export default function AdminPage() {
                       ) : (
                         <span className="text-primary/40 italic">Kein Passwort</span>
                       )}
+                    </p>
+                    <p className="text-primary/60 mt-1 text-sm">
+                      Admin Passwort:{' '}
+                      <span className="text-primary/80 font-mono">{evt.admin_password}</span>
                     </p>
                   </div>
 
@@ -924,9 +944,17 @@ export default function AdminPage() {
                 placeholder="Passwort"
                 value={eventPassword}
                 onChange={(e) => setEventPassword(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleAddEvent();
-                }}
+                className="bg-primary text-secondary w-full border p-2 text-sm focus:outline-none"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-primary text-xs tracking-wide uppercase">Passwort</label>
+              <input
+                type="text"
+                placeholder="Admin Passwort"
+                value={eventAdminPassword}
+                onChange={(e) => setEventAdminPassword(e.target.value)}
+                required
                 className="bg-primary text-secondary w-full border p-2 text-sm focus:outline-none"
               />
             </div>
@@ -971,9 +999,16 @@ export default function AdminPage() {
                 placeholder="Passwort"
                 value={editEventPassword}
                 onChange={(e) => setEditEventPassword(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleEditEvent();
-                }}
+                className="bg-primary text-secondary w-full border p-2 text-sm focus:outline-none"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-primary text-xs tracking-wide uppercase">Admin Passwort</label>
+              <input
+                type="text"
+                placeholder="Admin Passwort"
+                value={editEventAdminPassword}
+                onChange={(e) => setEditEventAdminPassword(e.target.value)}
                 className="bg-primary text-secondary w-full border p-2 text-sm focus:outline-none"
               />
             </div>

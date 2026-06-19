@@ -10,6 +10,7 @@ const LogoPage: React.FC<{ children }> = ({ children }) => {
           width={350}
           height={350}
           className="md:border-secondary md:border-r-4 md:pr-4"
+          loading="eager"
         />
 
         <div className="flex flex-col items-center gap-2 text-center md:items-start md:text-left">

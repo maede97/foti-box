@@ -3,7 +3,7 @@ import { LoadingSpinner } from '@/components/ui/loading';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 
-const ImageUploadClient: React.FC = () => {
+const ImageUploadClient: React.FC<{ eventSlug: string }> = ({ eventSlug }) => {
   const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined);
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(undefined);
   const [hasUploaded, setHasUploaded] = useState<boolean>(false);
@@ -38,6 +38,8 @@ const ImageUploadClient: React.FC = () => {
     try {
       const formData = new FormData();
       formData.append('file', selectedFile);
+      formData.append('eventSlug', eventSlug);
+
       const res = await fetch('/api/upload', {
         method: 'PUT',
         body: formData,
