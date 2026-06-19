@@ -50,10 +50,7 @@ const EventAdminPageClient: React.FC<{
 }> = ({ eventId, initialImageCount, eventName, eventSlug }) => {
   const [error, setError] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState(() => {
-    if (typeof window === 'undefined') return '';
-    return localStorage.getItem(`event-admin-${eventSlug}`) || '';
-  });
+  const [currentPassword, setCurrentPassword] = useState('');
   const [adminData, setAdminData] = useState<EventAdminData | null>(null);
   const [galleryPassword, setGalleryPassword] = useState('');
   const [imageCount, setImageCount] = useState(initialImageCount);
@@ -79,6 +76,7 @@ const EventAdminPageClient: React.FC<{
   useEffect(() => {
     const savedPassword = localStorage.getItem(`event-admin-${eventSlug}`);
     if (savedPassword) {
+      setCurrentPassword(savedPassword);
       void fetchGalleryAdmin(eventSlug, savedPassword, setError, setAdminData, setLoggedIn);
     }
   }, [eventSlug]);

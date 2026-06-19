@@ -12,10 +12,7 @@ const EventPageClient: React.FC<{
   const [images, setImages] = useState<{ uuid: string; aspectRatio?: number }[]>([]);
   const [error, setError] = useState('');
   const [loggedIn, setLoggedIn] = useState(doesNotRequirePassword);
-  const [currentPassword, setCurrentPassword] = useState(() => {
-    if (typeof window === 'undefined') return '';
-    return localStorage.getItem(`event-${eventSlug}`) || '';
-  });
+  const [currentPassword, setCurrentPassword] = useState('');
   const [hasMore, setHasMore] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [displayedCount, setDisplayedCount] = useState(15);
@@ -65,6 +62,7 @@ const EventPageClient: React.FC<{
   useEffect(() => {
     const savedPassword = localStorage.getItem(`event-${eventSlug}`);
     if (savedPassword) {
+      setCurrentPassword(savedPassword);
       void fetchGallery(eventSlug, savedPassword, setError, setImages, setLoggedIn);
     }
   }, [eventSlug]);

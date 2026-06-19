@@ -59,11 +59,8 @@ export default function AdminPage() {
 
   const [adminUsername, setAdminUsername] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
-  const [token, setToken] = useState<string | undefined>(() => {
-    if (typeof window === 'undefined') return undefined;
-    return localStorage.getItem('adminToken') ?? undefined;
-  });
-  const [loggedIn, setLoggedIn] = useState(() => Boolean(token));
+  const [token, setToken] = useState<string | undefined>(undefined);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [events, setEvents] = useState<EventWithCount[]>([]);
   const [boxes, setBoxes] = useState<IBox[]>([]);
 
@@ -632,7 +629,7 @@ export default function AdminPage() {
                     <p className="text-primary/60 mt-1 text-sm">
                       Passwort:{' '}
                       {evt.password ? (
-                        navigator && typeof navigator.share === 'function' ? (
+                        typeof navigator !== 'undefined' && typeof navigator.share === 'function' ? (
                           <span
                             className="text-primary/80 cursor-pointer font-mono hover:underline"
                             onClick={() => {
