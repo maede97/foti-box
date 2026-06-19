@@ -10,7 +10,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN npm install -g pnpm
 
-COPY package.json package-lock.json* pnpm-lock.yaml* ./
+COPY package.json package-lock.json* pnpm-lock.yaml* pnpm-workspace.yaml* ./
 
 RUN corepack enable pnpm && pnpm i --frozen-lockfile
 

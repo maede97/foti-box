@@ -5,7 +5,7 @@ import { IBox } from '@/models/box';
 import { IEvent } from '@/models/event';
 import { IImage } from '@/models/image';
 import { motion } from 'framer-motion';
-import { ExternalLink, Plus, X } from 'lucide-react';
+import { ExternalLink, Pencil, Plus, X } from 'lucide-react';
 import { Types } from 'mongoose';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -41,6 +41,12 @@ export default function AdminPage() {
   const [eventName, setEventName] = useState('');
   const [eventSlug, setEventSlug] = useState('');
   const [eventPassword, setEventPassword] = useState('');
+  const [eventAdminPassword, setEventAdminPassword] = useState('');
+  const [editEventId, setEditEventId] = useState('');
+  const [editEventName, setEditEventName] = useState('');
+  const [editEventSlug, setEditEventSlug] = useState('');
+  const [editEventPassword, setEditEventPassword] = useState('');
+  const [editEventAdminPassword, setEditEventAdminPassword] = useState('');
 
   const [boxLabel, setBoxLabel] = useState('');
   const [boxAccessToken, setBoxAccessToken] = useState('');
@@ -53,12 +59,16 @@ export default function AdminPage() {
 
   const [adminUsername, setAdminUsername] = useState('');
   const [adminPassword, setAdminPassword] = useState('');
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [token, setToken] = useState<string | undefined>(undefined);
+  const [token, setToken] = useState<string | undefined>(() => {
+    if (typeof window === 'undefined') return undefined;
+    return localStorage.getItem('adminToken') ?? undefined;
+  });
+  const [loggedIn, setLoggedIn] = useState(() => Boolean(token));
   const [events, setEvents] = useState<EventWithCount[]>([]);
   const [boxes, setBoxes] = useState<IBox[]>([]);
 
   const [showAddEvent, setShowAddEvent] = useState(false);
+  const [showEditEvent, setShowEditEvent] = useState(false);
   const [showAddBox, setShowAddBox] = useState(false);
   const [showAddLogo, setShowAddLogo] = useState('');
 
@@ -103,7 +113,12 @@ export default function AdminPage() {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ name: eventName, slug: eventSlug, password: eventPassword }),
+      body: JSON.stringify({
+        name: eventName,
+        slug: eventSlug,
+        password: eventPassword,
+        admin_password: eventAdminPassword,
+      }),
     });
 
     if (!res.ok) {
@@ -115,6 +130,7 @@ export default function AdminPage() {
     setEventName('');
     setEventSlug('');
     setEventPassword('');
+    setEventAdminPassword('');
     fetchEvents();
     setShowAddEvent(false);
   }
@@ -138,6 +154,64 @@ export default function AdminPage() {
     }
     setImages(images.filter((img) => (img.event as unknown as ObjectId) !== eventID));
     setEvents(events.filter((event) => (event._id as unknown as ObjectId) !== eventID));
+  }
+
+  function openEditEventModal(event: EventWithCount) {
+    setError('');
+    setEditEventId(event._id as unknown as string);
+    setEditEventName(event.name);
+    setEditEventSlug(event.slug);
+    setEditEventPassword(event.password || '');
+    setEditEventAdminPassword(event.admin_password);
+    setShowEditEvent(true);
+  }
+
+  function closeEditEventModal() {
+    setShowEditEvent(false);
+    setEditEventId('');
+    setEditEventName('');
+    setEditEventSlug('');
+    setEditEventPassword('');
+    setEditEventAdminPassword('');
+  }
+
+  async function handleEditEvent() {
+    if (!editEventId || !editEventName || !editEventSlug || !editEventAdminPassword)
+      return setError('Name, Slug und Admin Passwort angeben.');
+
+    const res = await fetch('/api/admin/events', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+      body: JSON.stringify({
+        eventID: editEventId,
+        name: editEventName,
+        slug: editEventSlug,
+        password: editEventPassword,
+        admin_password: editEventAdminPassword,
+      }),
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      setError(data.error || 'Event kann nicht aktualisiert werden.');
+      return;
+    }
+
+    if (imagesForEvent && (imagesForEvent._id as unknown as string) === editEventId) {
+      setImagesForEvent({
+        ...imagesForEvent,
+        name: editEventName,
+        slug: editEventSlug,
+        password: editEventPassword,
+        admin_password: editEventAdminPassword,
+      } as IEvent);
+    }
+
+    fetchEvents();
+    closeEditEventModal();
   }
   async function handleLogin() {
     setError('');
@@ -428,6 +502,7 @@ export default function AdminPage() {
   useEffect(() => {
     const savedToken = localStorage.getItem('adminToken');
     if (savedToken) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setToken(savedToken);
       setLoggedIn(true);
     }
@@ -435,10 +510,10 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (loggedIn && token) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchEvents();
       fetchBoxes();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loggedIn, token]);
 
   if (!loggedIn) {
@@ -577,6 +652,10 @@ export default function AdminPage() {
                         <span className="text-primary/40 italic">Kein Passwort</span>
                       )}
                     </p>
+                    <p className="text-primary/60 mt-1 text-sm">
+                      Admin Passwort:{' '}
+                      <span className="text-primary/80 font-mono">{evt.admin_password}</span>
+                    </p>
                   </div>
 
                   {/* Logo Display */}
@@ -665,6 +744,12 @@ export default function AdminPage() {
                     }}
                   >
                     Bilder laden
+                  </button>
+                  <button
+                    onClick={() => openEditEventModal(evt)}
+                    className="bg-primary text-secondary hover:bg-accent-dark cursor-pointer rounded border px-4 py-2 text-xs font-semibold tracking-wide uppercase transition focus:outline-none"
+                  >
+                    <Pencil className="mr-1 inline size-3" /> Bearbeiten
                   </button>
                   <button
                     onClick={() => handleDeleteEvent(evt._id)}
@@ -859,9 +944,17 @@ export default function AdminPage() {
                 placeholder="Passwort"
                 value={eventPassword}
                 onChange={(e) => setEventPassword(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleAddEvent();
-                }}
+                className="bg-primary text-secondary w-full border p-2 text-sm focus:outline-none"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-primary text-xs tracking-wide uppercase">Passwort</label>
+              <input
+                type="text"
+                placeholder="Admin Passwort"
+                value={eventAdminPassword}
+                onChange={(e) => setEventAdminPassword(e.target.value)}
+                required
                 className="bg-primary text-secondary w-full border p-2 text-sm focus:outline-none"
               />
             </div>
@@ -871,6 +964,60 @@ export default function AdminPage() {
               className="bg-primary text-secondary mt-4 w-full cursor-pointer p-3 text-sm font-semibold tracking-wide uppercase focus:outline-none"
             >
               Event hinzufügen
+            </button>
+          </div>
+        </Modal>
+      )}
+
+      {showEditEvent && (
+        <Modal title="Event bearbeiten" onClose={closeEditEventModal}>
+          <div className="space-y-3">
+            <div className="flex flex-col gap-1">
+              <label className="text-primary text-xs tracking-wide uppercase">Event Name</label>
+              <input
+                type="text"
+                placeholder="Event Name"
+                value={editEventName}
+                onChange={(e) => setEditEventName(e.target.value)}
+                className="bg-primary text-secondary w-full border p-2 text-sm focus:outline-none"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-primary text-xs tracking-wide uppercase">Event Slug</label>
+              <input
+                type="text"
+                placeholder="Event Slug"
+                value={editEventSlug}
+                onChange={(e) => setEditEventSlug(e.target.value)}
+                className="bg-primary text-secondary w-full border p-2 text-sm focus:outline-none"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-primary text-xs tracking-wide uppercase">Passwort</label>
+              <input
+                type="text"
+                placeholder="Passwort"
+                value={editEventPassword}
+                onChange={(e) => setEditEventPassword(e.target.value)}
+                className="bg-primary text-secondary w-full border p-2 text-sm focus:outline-none"
+              />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="text-primary text-xs tracking-wide uppercase">Admin Passwort</label>
+              <input
+                type="text"
+                placeholder="Admin Passwort"
+                value={editEventAdminPassword}
+                onChange={(e) => setEditEventAdminPassword(e.target.value)}
+                className="bg-primary text-secondary w-full border p-2 text-sm focus:outline-none"
+              />
+            </div>
+            {error && <p className="text-error p-2 text-center text-sm">{error}</p>}
+            <button
+              onClick={handleEditEvent}
+              className="bg-primary text-secondary mt-4 w-full cursor-pointer p-3 text-sm font-semibold tracking-wide uppercase focus:outline-none"
+            >
+              Event speichern
             </button>
           </div>
         </Modal>

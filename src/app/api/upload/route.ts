@@ -59,7 +59,9 @@ const uploadFile = async (file: File, eventId: ObjectId) => {
 export async function PUT(req: Request) {
   await connectToDatabase();
 
-  const event = await Event.findOne({ active: true });
+  const formData = await req.formData();
+  const event = await Event.findOne({ slug: formData.get('eventSlug') as string });
+
   if (!event) {
     return NextResponse.json({ error: 'Kein aktiver Event gefunden' }, { status: 400 });
   }
@@ -72,7 +74,6 @@ export async function PUT(req: Request) {
     );
   }
 
-  const formData = await req.formData();
   const file = formData.get('file') as File;
 
   const fileUuid = await uploadFile(file, event._id);
