@@ -629,7 +629,8 @@ export default function AdminPage() {
                     <p className="text-primary/60 mt-1 text-sm">
                       Passwort:{' '}
                       {evt.password ? (
-                        typeof navigator !== 'undefined' && typeof navigator.share === 'function' ? (
+                        typeof navigator !== 'undefined' &&
+                        typeof navigator.share === 'function' ? (
                           <span
                             className="text-primary/80 cursor-pointer font-mono hover:underline"
                             onClick={() => {

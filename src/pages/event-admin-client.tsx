@@ -16,6 +16,7 @@ type EventAdminData = {
   slug: string;
   password: string;
   allow_user_uploads: boolean;
+  allow_download: boolean;
   logo?: string;
 };
 
@@ -66,6 +67,7 @@ const EventAdminPageClient: React.FC<{
   const [isSavingPassword, setIsSavingPassword] = useState(false);
   const [passwordSaved, setPasswordSaved] = useState(false);
   const [isSavingUploads, setIsSavingUploads] = useState(false);
+  const [isSavingDownloads, setIsSavingDownloads] = useState(false);
   const [isDownloadingQr, setIsDownloadingQr] = useState(false);
   const [isSavingLogo, setIsSavingLogo] = useState(false);
   const [isDeletingLogo, setIsDeletingLogo] = useState(false);
@@ -76,6 +78,7 @@ const EventAdminPageClient: React.FC<{
   useEffect(() => {
     const savedPassword = localStorage.getItem(`event-admin-${eventSlug}`);
     if (savedPassword) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentPassword(savedPassword);
       void fetchGalleryAdmin(eventSlug, savedPassword, setError, setAdminData, setLoggedIn);
     }
@@ -83,22 +86,15 @@ const EventAdminPageClient: React.FC<{
 
   useEffect(() => {
     if (!adminData) return;
-
-    const timeoutId = window.setTimeout(() => {
-      setGalleryPassword(adminData.password || '');
-      setPasswordSaved(false);
-    }, 0);
-
-    return () => window.clearTimeout(timeoutId);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setGalleryPassword(adminData.password || '');
+    setPasswordSaved(false);
   }, [adminData]);
 
   useEffect(() => {
     if (!adminData?.allow_user_uploads) {
-      const timeoutId = window.setTimeout(() => {
-        setUploadQrCodeUrl('');
-      }, 0);
-
-      return () => window.clearTimeout(timeoutId);
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setUploadQrCodeUrl('');
     }
 
     let cancelled = false;
@@ -257,6 +253,41 @@ const EventAdminPageClient: React.FC<{
     }
   };
 
+  const handleToggleDownloads = async () => {
+    if (!adminData) return;
+
+    setIsSavingDownloads(true);
+    setError('');
+
+    try {
+      const res = await fetch('/api/event-admin/allow-download', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          eventId,
+          adminPassword: currentPassword,
+          allow_download: !adminData.allow_download,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Download-Freigabe konnte nicht geändert werden.');
+      }
+
+      const data = await res.json();
+      setAdminData(data.event);
+    } catch (toggleError) {
+      setError(
+        toggleError instanceof Error
+          ? toggleError.message
+          : 'Download-Freigabe konnte nicht geändert werden.',
+      );
+    } finally {
+      setIsSavingDownloads(false);
+    }
+  };
+
   const handleLogoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -390,6 +421,7 @@ const EventAdminPageClient: React.FC<{
           }}
           error={error}
           selectedEvent={eventSlug}
+          showAdminTitle={true}
         />
       )}
       {loggedIn && adminData && (
@@ -457,6 +489,32 @@ const EventAdminPageClient: React.FC<{
                         Passwort gespeichert.
                       </p>
                     ) : null}
+                  </div>
+
+                  <div className="mt-4 flex items-center justify-between gap-4">
+                    <div>
+                      <h2 className="text-primary text-xl font-semibold">Downloads</h2>
+                      <p className="text-primary/60 text-sm">
+                        {adminData.allow_download
+                          ? 'Besucher können Bilder herunterladen.'
+                          : 'Besucher können keine Bilder herunterladen.'}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => void handleToggleDownloads()}
+                      disabled={isSavingDownloads}
+                      className={`cursor-pointer rounded border px-4 py-2 text-xs font-semibold tracking-wide uppercase transition focus:outline-none disabled:opacity-50 ${
+                        adminData.allow_download
+                          ? 'bg-success hover:bg-success-dark text-secondary'
+                          : 'bg-error hover:bg-error-dark text-secondary'
+                      }`}
+                    >
+                      {isSavingDownloads
+                        ? 'Speichern...'
+                        : adminData.allow_download
+                          ? 'Download Ein'
+                          : 'Download Aus'}
+                    </button>
                   </div>
                 </section>
 
@@ -545,8 +603,8 @@ const EventAdminPageClient: React.FC<{
                   <div>
                     <h2 className="text-primary text-xl font-semibold">Bilder verwalten</h2>
                     <p className="text-primary/60 text-sm">
-                      Hier kannst du Bilder löschen. Insgesamt {imageCount}{' '}
-                      {imageCount === 1 ? 'Bild' : 'Bilder'} vorhanden.
+                      Hier kannst du Bilder löschen. Insgesamt {imageCount === 1 ? 'ist' : 'sind'}{' '}
+                      {imageCount} {imageCount === 1 ? 'Bild' : 'Bilder'} vorhanden.
                     </p>
                   </div>
                   <button

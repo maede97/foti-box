@@ -62,13 +62,14 @@ const EventPageClient: React.FC<{
   useEffect(() => {
     const savedPassword = localStorage.getItem(`event-${eventSlug}`);
     if (savedPassword) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentPassword(savedPassword);
       void fetchGallery(eventSlug, savedPassword, setError, setImages, setLoggedIn);
     }
   }, [eventSlug]);
 
   return (
-    <div>
+    <div className="p-6">
       {!loggedIn && (
         <GalleryLogin
           fetchGallery={(selectedEvents, passwords) => {
