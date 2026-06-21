@@ -60,7 +60,7 @@ const EventPageClient: React.FC<{
   }, [doesNotRequirePassword, eventSlug]);
 
   useEffect(() => {
-    const savedPassword = localStorage.getItem(`event-${eventSlug}`);
+    const savedPassword = sessionStorage.getItem(`event-${eventSlug}`);
     if (savedPassword) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentPassword(savedPassword);

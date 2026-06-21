@@ -36,6 +36,10 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: authCheck.error }, { status: authCheck.status });
   }
 
+  if (!file.type.startsWith('image/')) {
+    return NextResponse.json({ error: 'Bitte eine gültige Bilddatei auswählen.' }, { status: 400 });
+  }
+
   const uploadDir = path.join(environmentVariables.UPLOAD_FOLDER, 'logos');
   await fs.mkdir(uploadDir, { recursive: true });
 

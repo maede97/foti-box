@@ -17,5 +17,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Falsches Admin Passwort.' }, { status: 401 });
   }
 
-  return NextResponse.json({ event });
+  const { admin_password, ...eventData } = event.toObject();
+
+  return NextResponse.json({ event: eventData });
 }

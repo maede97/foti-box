@@ -57,13 +57,14 @@ const uploadFile = async (file: File, eventId: ObjectId) => {
 };
 
 export async function PUT(req: Request) {
+  // upload from user via web frontend
   await connectToDatabase();
 
   const formData = await req.formData();
   const event = await Event.findOne({ slug: formData.get('eventSlug') as string });
 
   if (!event) {
-    return NextResponse.json({ error: 'Kein aktiver Event gefunden' }, { status: 400 });
+    return NextResponse.json({ error: 'Kein Event gefunden' }, { status: 400 });
   }
 
   // check if event allows user uploads
@@ -82,6 +83,7 @@ export async function PUT(req: Request) {
 }
 
 export async function POST(req: Request) {
+  // upload from box
   await connectToDatabase();
 
   const apiKey = req.headers.get('x-api-key');

@@ -12,9 +12,11 @@ export async function POST(req: NextRequest) {
   authCheck.event.allow_user_uploads = Boolean(allow_user_uploads);
   await authCheck.event.save();
 
+  const { admin_password, ...eventData } = authCheck.event.toObject();
+
   return NextResponse.json({
     message: `Der Event "${authCheck.event.name}" erlaubt nun ${allow_user_uploads ? '' : 'keine '}Uploads`,
-    event: authCheck.event,
+    event: eventData,
   });
 }
 

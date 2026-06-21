@@ -76,7 +76,7 @@ const EventAdminPageClient: React.FC<{
   const uploadUrl = `${environmentVariables.NEXT_PUBLIC_APP_HOST_URL}/event/${eventSlug}/upload`;
 
   useEffect(() => {
-    const savedPassword = localStorage.getItem(`event-admin-${eventSlug}`);
+    const savedPassword = sessionStorage.getItem(`event-admin-${eventSlug}`);
     if (savedPassword) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentPassword(savedPassword);
@@ -402,7 +402,7 @@ const EventAdminPageClient: React.FC<{
   };
 
   const handleLogout = () => {
-    localStorage.removeItem(`event-admin-${eventSlug}`);
+    sessionStorage.removeItem(`event-admin-${eventSlug}`);
     setLoggedIn(false);
     setCurrentPassword('');
     setAdminData(null);
@@ -690,7 +690,7 @@ const EventAdminPageClient: React.FC<{
                   <div className="space-y-4">
                     <div className="bg-primary/5 relative h-44 overflow-hidden rounded-lg shadow-md">
                       <Image
-                        alt={adminData.logo}
+                        alt={`${eventName} Logo`}
                         fill
                         src={`/api/admin/logo?logo=${adminData.logo}&eventId=${eventId}`}
                         className="object-contain p-4"

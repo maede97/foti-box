@@ -12,9 +12,11 @@ export async function PUT(req: NextRequest) {
   authCheck.event.password = password || '';
   await authCheck.event.save();
 
+  const { admin_password, ...eventData } = authCheck.event.toObject();
+
   return NextResponse.json({
     message: 'Passwort aktualisiert',
-    event: authCheck.event,
+    event: eventData,
   });
 }
 

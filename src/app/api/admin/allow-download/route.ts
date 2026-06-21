@@ -19,9 +19,11 @@ export async function POST(req: NextRequest) {
   );
   if (!event) return NextResponse.json({ error: 'Event nicht gefunden' }, { status: 404 });
 
+  const { admin_password, ...eventData } = event.toObject();
+
   return NextResponse.json({
     message: `Der Event "${event.name}" erlaubt nun ${allow_download ? '' : 'keine '}Downloads`,
-    event,
+    event: eventData,
   });
 }
 

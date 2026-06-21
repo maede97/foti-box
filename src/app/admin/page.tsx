@@ -227,13 +227,13 @@ export default function AdminPage() {
     }
 
     const data = await res.json();
-    localStorage.setItem('adminToken', data.token);
+    sessionStorage.setItem('adminToken', data.token);
     setToken(data.token);
     setLoggedIn(true);
   }
 
   function handleLogout() {
-    localStorage.removeItem('adminToken');
+    sessionStorage.removeItem('adminToken');
     setToken(undefined);
     setLoggedIn(false);
   }
@@ -497,7 +497,7 @@ export default function AdminPage() {
   }
 
   useEffect(() => {
-    const savedToken = localStorage.getItem('adminToken');
+    const savedToken = sessionStorage.getItem('adminToken');
     if (savedToken) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setToken(savedToken);
@@ -946,7 +946,7 @@ export default function AdminPage() {
               />
             </div>
             <div className="flex flex-col gap-1">
-              <label className="text-primary text-xs tracking-wide uppercase">Passwort</label>
+              <label className="text-primary text-xs tracking-wide uppercase">Admin Passwort</label>
               <input
                 type="text"
                 placeholder="Admin Passwort"

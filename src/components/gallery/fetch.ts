@@ -25,7 +25,7 @@ export async function fetchGallery(eventSlug, password, setError, setImages, set
 
   try {
     const images = await fetchGalleryPage(eventSlug, password, 1, 15);
-    localStorage.setItem(`event-${eventSlug}`, password);
+    sessionStorage.setItem(`event-${eventSlug}`, password);
     setImages(images);
     setLoggedIn(true);
   } catch (error) {
@@ -58,7 +58,7 @@ export async function fetchGalleryAdmin(eventSlug, password, setError, setAdminD
 
   try {
     const adminData = await internalFetchGalleryAdmin(eventSlug, password);
-    localStorage.setItem(`event-admin-${eventSlug}`, password);
+    sessionStorage.setItem(`event-admin-${eventSlug}`, password);
     setLoggedIn(true);
     setAdminData(adminData.event);
   } catch (error) {
