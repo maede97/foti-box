@@ -22,7 +22,6 @@ const ImageUpload: React.FC = async ({ params }: { params: ParamsType }) => {
 
   const event = await Event.findOne({ slug: slug });
 
-
   if (!event || !event.allow_user_uploads) {
     return <ErrorPage message={'Uploads sind derzeit nicht möglich.'} />;
   }

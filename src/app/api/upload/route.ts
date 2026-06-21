@@ -61,6 +61,13 @@ export async function PUT(req: Request) {
   await connectToDatabase();
 
   const formData = await req.formData();
+
+  const file = formData.get('file') as File;
+
+  if (!file) {
+    return NextResponse.json({ error: 'Fehlende Datei' }, { status: 400 });
+  }
+
   const event = await Event.findOne({ slug: formData.get('eventSlug') as string });
 
   if (!event) {
@@ -74,8 +81,6 @@ export async function PUT(req: Request) {
       { status: 400 },
     );
   }
-
-  const file = formData.get('file') as File;
 
   const fileUuid = await uploadFile(file, event._id);
 
