@@ -35,32 +35,41 @@ const EventPageClient: React.FC<{
 
   useEffect(() => {
     if (loggedIn) {
-      if (images.length < 15) {
-        setHasMore(false);
-      }
-      if (images.length > 0) {
-        setDisplayedCount((prev) => Math.min(prev, images.length));
-      }
+      const timeoutId = window.setTimeout(() => {
+        if (images.length < 15) {
+          setHasMore(false);
+        }
+        if (images.length > 0) {
+          setDisplayedCount((prev) => Math.min(prev, images.length));
+        }
+      }, 0);
+
+      return () => window.clearTimeout(timeoutId);
     }
   }, [images, loggedIn]);
 
   useEffect(() => {
     if (doesNotRequirePassword) {
-      setCurrentPassword('');
+      const timeoutId = window.setTimeout(() => {
+        setCurrentPassword('');
+      }, 0);
       void fetchGallery(eventSlug, '', setError, setImages, setLoggedIn);
+
+      return () => window.clearTimeout(timeoutId);
     }
   }, [doesNotRequirePassword, eventSlug]);
 
   useEffect(() => {
-    const savedPassword = localStorage.getItem(`event-${eventSlug}`);
+    const savedPassword = sessionStorage.getItem(`event-${eventSlug}`);
     if (savedPassword) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentPassword(savedPassword);
       void fetchGallery(eventSlug, savedPassword, setError, setImages, setLoggedIn);
     }
   }, [eventSlug]);
 
   return (
-    <div>
+    <div className="p-6">
       {!loggedIn && (
         <GalleryLogin
           fetchGallery={(selectedEvents, passwords) => {

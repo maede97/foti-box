@@ -1,8 +1,8 @@
 import { connectToDatabase } from '@/lib/mongodb';
 import Event from '@/models/event';
+import ErrorPage from '@/pages/error';
+import ImageUploadClient from '@/pages/upload-page-client';
 import React from 'react';
-import ErrorPage from '../../pages/error';
-import ImageUploadClient from '../../pages/upload-page-client';
 
 export const generateMetadata = async () => {
   return {
@@ -11,16 +11,22 @@ export const generateMetadata = async () => {
   };
 };
 
-const ImageUpload: React.FC = async () => {
+interface ParamsType {
+  slug: string;
+}
+
+const ImageUpload: React.FC = async ({ params }: { params: ParamsType }) => {
   await connectToDatabase();
 
-  const event = await Event.findOne({ allow_user_uploads: true, active: true });
+  const { slug } = await params;
 
-  if (!event) {
+  const event = await Event.findOne({ slug: slug });
+
+  if (!event || !event.allow_user_uploads) {
     return <ErrorPage message={'Uploads sind derzeit nicht möglich.'} />;
   }
 
-  return <ImageUploadClient />;
+  return <ImageUploadClient eventSlug={slug} />;
 };
 
 export default ImageUpload;

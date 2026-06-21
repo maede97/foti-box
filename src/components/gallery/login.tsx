@@ -2,10 +2,11 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 
 const GalleryLogin: React.FC<{
-  fetchGallery;
+  fetchGallery: (selectedEvent: string, password: string) => void;
   error: string;
   selectedEvent: string;
-}> = ({ fetchGallery, error, selectedEvent }) => {
+  showAdminTitle?: boolean;
+}> = ({ fetchGallery, error, selectedEvent, showAdminTitle }) => {
   const [password, setPassword] = useState('');
 
   return (
@@ -15,7 +16,9 @@ const GalleryLogin: React.FC<{
       className="bg-secondary mx-auto max-w-xl p-6"
     >
       <h2 className="text-primary mb-6 text-lg font-semibold tracking-wide uppercase">
-        Anmelden, um die Galerie anzusehen
+        {showAdminTitle
+          ? 'Anmelden, um die Galerie zu bearbeiten'
+          : 'Anmelden, um die Galerie anzusehen'}
       </h2>
 
       {error && <p className="text-error p-2 text-center text-sm">{error}</p>}

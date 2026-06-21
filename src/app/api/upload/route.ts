@@ -57,11 +57,21 @@ const uploadFile = async (file: File, eventId: ObjectId) => {
 };
 
 export async function PUT(req: Request) {
+  // upload from user via web frontend
   await connectToDatabase();
 
-  const event = await Event.findOne({ active: true });
+  const formData = await req.formData();
+
+  const file = formData.get('file') as File;
+
+  if (!file) {
+    return NextResponse.json({ error: 'Fehlende Datei' }, { status: 400 });
+  }
+
+  const event = await Event.findOne({ slug: formData.get('eventSlug') as string });
+
   if (!event) {
-    return NextResponse.json({ error: 'Kein aktiver Event gefunden' }, { status: 400 });
+    return NextResponse.json({ error: 'Kein Event gefunden' }, { status: 400 });
   }
 
   // check if event allows user uploads
@@ -72,15 +82,13 @@ export async function PUT(req: Request) {
     );
   }
 
-  const formData = await req.formData();
-  const file = formData.get('file') as File;
-
   const fileUuid = await uploadFile(file, event._id);
 
   return NextResponse.json({ uuid: fileUuid });
 }
 
 export async function POST(req: Request) {
+  // upload from box
   await connectToDatabase();
 
   const apiKey = req.headers.get('x-api-key');
