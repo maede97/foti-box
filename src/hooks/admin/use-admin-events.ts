@@ -173,7 +173,7 @@ export function useAdminEvents({ token, onUnauthorized, setError }: UseAdminEven
       return;
     }
 
-    if (selectedEventRef.current && selectedEventRef.current._id === editEventId) {
+    if (selectedEventRef.current && String(selectedEventRef.current._id) === editEventId) {
       const updatedEvent = {
         ...selectedEventRef.current,
         name: editEventName,
