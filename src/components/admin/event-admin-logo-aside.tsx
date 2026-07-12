@@ -24,7 +24,7 @@ export function EventAdminLogoAside({
         <div>
           <h2 className="text-primary text-xl font-semibold">Logo</h2>
           <p className="text-primary/60 text-sm">
-            Das Logo wird auf jedem Foto unten rechts eingefügt.
+            Das Logo wird auf jedem neuen Upload unten rechts eingefügt.
           </p>
         </div>
         {!logo && (
