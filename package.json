@@ -37,9 +37,9 @@
     "qrcode": "^1.5.4",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "sharp": "^0.34.5",
+    "sharp": "^0.35.3",
     "tailwind-merge": "^3.6.0",
-    "uuid": "^13.0.2",
+    "uuid": "^14.0.1",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -54,16 +54,16 @@
     "dotenv": "^17.4.2",
     "eslint": "^10.7.0",
     "eslint-config-next": "^16.2.10",
-    "lint-staged": "^16.4.0",
-    "postcss": "^8.5.19",
+    "lint-staged": "^17.1.0",
+    "postcss": "^8.5.20",
     "prettier": "^3.9.5",
     "prettier-plugin-organize-imports": "^4.3.0",
-    "prettier-plugin-tailwindcss": "^0.7.4",
-    "sort-package-json": "^3.7.1",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "sort-package-json": "^4.0.0",
     "tailwindcss": "^4.3.3",
     "ts-node": "^10.9.2",
     "tsx": "^4.23.1",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "packageManager": "pnpm@11.8.0+sha512.c1f5e7c4cb241c8f174b743851d82f42b802324afc8b0f116b96adb15aa06664948dde36960a3ba1079ba5b4b29dd0140135b94b5b5f5263592249d68e555f26",
   "engines": {
